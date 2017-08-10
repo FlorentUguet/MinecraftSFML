@@ -50,20 +50,23 @@ HEADERS += \
     opengl/opengltexture.h \
     opengl/scene.h
 
+#Threading Linux
+unix: LIBS += -lpthread
+
 #OpenGL
 win32: LIBS += -lopengl32 -lglu32
 else:unix: LIBS+= -lGL -lGLU
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/  -lsfml-graphics -lsfml-window -lsfml-system
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/ -lsfml-graphics-d -lsfml-window-d -lsfml-system-d
-else:unix: LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/ -lsfml-graphics -lsfml-window -lsfml-system
+else:unix: LIBS += -lsfml-graphics -lsfml-window -lsfml-system
 
 INCLUDEPATH += $$PWD/../lib/SFML-2.4.2/include
 DEPENDPATH += $$PWD/../lib/SFML-2.4.2/include
 
 #GLEW
 win32: LIBS += -L$$PWD/../lib/glew-2.1.0/lib/ -lglew32 -lglew32.dll
-else:unix: LIBS+= -lglew
+else:unix: LIBS+= -lGLEW
 
 INCLUDEPATH += $$PWD/../lib/glew-2.1.0/include
 DEPENDPATH += $$PWD/../lib/glew-2.1.0/include

@@ -116,9 +116,7 @@ float Perlin::_3D(std::initializer_list<float> coordinates, float scale) const
     thread_local float Li1,Li2,Li3,Li4,Li5,Li6;
     thread_local float s[2],t[2],u[2],v[2];
     thread_local float Cx,Cy,Cz;
-    thread_local float nx,ny,nz;
 
-    thread_local float tmp;
     thread_local float tempx,tempy,tempz;
 
     std::initializer_list<float>::const_iterator it = coordinates.begin();
@@ -199,7 +197,6 @@ float Perlin::_4D(std::initializer_list<float> coordinates, float scale) const
     thread_local float s[4],t[4],u[4],v[4];
     thread_local float Cx,Cy,Cz,Cw;
 
-    thread_local float tmp;
     thread_local float tempx,tempy,tempz,tempw;
 
     std::initializer_list<float>::const_iterator it = coordinates.begin();
