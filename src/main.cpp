@@ -22,6 +22,7 @@ int main()
 
     //Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
     Tests::TestBlock(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
+    //Tests::TestTexturePlacement(r,"textures/dirt-side.jpg");
 
     return 0;
 }

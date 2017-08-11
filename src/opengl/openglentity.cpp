@@ -167,7 +167,7 @@ void OpenGLEntity::draw(Scene *scene)
 
     for(int i=0;i<this->children.size();i++)
     {
-        this->children[i]->isVisible();
+        if(this->children[i]->isVisible())
             this->children[i]->draw(scene);
     }
 }

@@ -19,7 +19,7 @@ void Box3D::init()
         switch(i)
         {
         case Sides::TOP:
-            plane->translate(0,0.5,0);
+            plane->translate(0,1.0,0);
             plane->rotate(90.0f);
             break;
         case Sides::BOTTOM:
@@ -35,16 +35,21 @@ void Box3D::init()
             plane->rotate(0.f,90.0f);
             break;
         case Sides::FRONT:
-            plane->translate(0,0,0);
+            plane->translate(0,0,1);
             break;
         case Sides::BACK:
-            plane->translate(0,0,-1.0);
+            plane->translate(0,0,-1);
             plane->rotate(0.f,180.0f);
             break;
+
         }
 
         this->sides[i] = plane;
+        this->sides[i]->hide();
     }
+
+    this->sides[Sides::TOP]->show();
+    this->sides[Sides::BOTTOM]->show();
 
     loadBuffer();
 }

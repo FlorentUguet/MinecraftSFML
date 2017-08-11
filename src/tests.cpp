@@ -17,6 +17,28 @@ void Tests::MatriceOperationsTiming(int number)
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(done-started).count() << "us for " << number << " operations" << std::endl;
 }
 
+void Tests::TestTexturePlacement(Renderer *r, std::string file)
+{
+    OpenGLEntity *e = new OpenGLEntity();
+    e->show();
+
+    OpenGLTexture *texture = new OpenGLTexture(file);
+
+    Plane2D *p = new Plane2D(e);
+    p->init();
+    p->setTexture(texture);
+
+    //Shaders
+    GLuint fragmentID = GLUtils::LoadShader("shaders/TextureFSH.fsh", GL_FRAGMENT_SHADER);
+    GLuint vertexID = GLUtils::LoadShader("shaders/MVPVSH.vsh", GL_VERTEX_SHADER);
+
+    //Program
+    GLuint programID = GLUtils::LoadShaders(vertexID,fragmentID);
+    r->setProgram(programID);
+
+    TestEntity(r,e);
+}
+
 void Tests::TestTexture(Renderer *r, std::string file0, std::string file1)
 {
     OpenGLEntity *e = new OpenGLEntity();

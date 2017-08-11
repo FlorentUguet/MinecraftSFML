@@ -20,6 +20,7 @@ public:
     static void MatriceOperationsTiming(int number);
     static void TestBlock(Renderer *r, std::string texSide, std::string texBottom, std::string texTop);
     static void TestShapes(Renderer *r);
+    static void TestTexturePlacement(Renderer *r, std::string file);
     static void TestTexture(Renderer *r, std::string file0, std::string file1);
     static void TestEntity(Renderer *r, OpenGLEntity *e);
 };
