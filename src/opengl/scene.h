@@ -19,7 +19,7 @@ public:
     Scene(float fov = SCENE_FOV, float ratio = SCENE_RATIO, float near = SCENE_NEAR, float far = SCENE_FAR);
     void setRoot(OpenGLEntity* e);
 
-    void setVertexShader(GLuint shader, std::string projection = "projectionMatrix", std::string view = "viewMatrix", std::string model = "modelMatrix");
+    void setVertexShader(GLuint shader);
 
     GLint getMVPId();
     GLint getModelViewMatrixId();

@@ -57,7 +57,6 @@ void OpenGLEntity::loadBuffer()
 {
     if(this->vertices.size() != 0)
     {
-
         GLfloat g_vertex_buffer_data[this->vertices.size()];
         std::copy(this->vertices.begin(),this->vertices.end(),g_vertex_buffer_data);
 
@@ -78,7 +77,7 @@ void OpenGLEntity::translate(float x, float y, float z)
 
 void OpenGLEntity::rotate(float x, float y, float z)
 {
-    this->rotation = glm::vec3(x,y,z);
+    this->rotation = glm::vec3(glm::radians(x),glm::radians(y),glm::radians(z));
 }
 
 glm::mat4 OpenGLEntity::getTransformedMatrix()
@@ -96,9 +95,6 @@ glm::mat4 OpenGLEntity::getTransformedMatrix()
 
 void OpenGLEntity::draw(Scene *scene)
 {
-    //if(scene->getModelViewMatrixId() != 0)
-    //    glUniformMatrix4fv(scene->getModelViewMatrixId(), 1, GL_FALSE, &this->getTransformedMatrix()[0][0]);
-
     glm::mat4 mvp = scene->calculateMVP(this);
     glUniformMatrix4fv(scene->getMVPId(), 1, GL_FALSE, &mvp[0][0]);
 

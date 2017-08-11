@@ -25,13 +25,9 @@ GLint Scene::getModelViewMatrixId()
     return this->modelMatrixLocation;
 }
 
-void Scene::setVertexShader(GLuint shader, std::string projection, std::string view, std::string model)
+void Scene::setVertexShader(GLuint shader)
 {
     this->programID = shader;
-
-    this->projectionMatrixLocation = glGetUniformLocation(shader, projection.c_str());
-    this->viewMatrixLocation = glGetUniformLocation(shader, view.c_str());
-    this->modelMatrixLocation = glGetUniformLocation(shader, model.c_str());
     this->MVPLocation = glGetUniformLocation(this->programID, "MVP");
 
     this->viewMatrix = glm::lookAt(
@@ -39,9 +35,6 @@ void Scene::setVertexShader(GLuint shader, std::string projection, std::string v
         glm::vec3(0,0,0), // and looks at the origin
         glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
     );
-
-    std::cout << "Scene's matrixs loaded : ";
-    std::cout << "M:" << this->modelMatrixLocation << ", V:" << this->viewMatrixLocation << ", P:" << this->projectionMatrixLocation << std::endl;
 }
 
 glm::mat4 Scene::calculateMVP(OpenGLEntity *e)
@@ -51,16 +44,8 @@ glm::mat4 Scene::calculateMVP(OpenGLEntity *e)
 
 void Scene::draw()
 {
-    /*
-    if(this->projectionMatrixLocation != 0)
-        glUniformMatrix4fv(this->projectionMatrixLocation, 1, GL_FALSE, &this->projectionMatrix[0][0]); // Envoyer la matrice de projection au shader
-
-    if(this->viewMatrixLocation != 0)
-        glUniformMatrix4fv(this->viewMatrixLocation, 1, GL_FALSE, &this->viewMatrix[0][0]);
-    */
-
     this->root->draw(this);
 
-    //std::cout << "Errors : " << GLUtils::GetErrors() << std::endl;
-    //exit(0);
+    std::string errors = GLUtils::GetErrors();
+    if(!errors.empty()) std::cout << "Errors : " << errors  << std::endl;
 }

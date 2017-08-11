@@ -78,4 +78,5 @@ DISTFILES += \
     shaders/SimpleFragmentShader.fsh \
     shaders/SimpleVertexShader.vsh \
     shaders/TextureFSH.fsh \
-    shaders/MVPVSH.vsh
+    shaders/MVPVSH.vsh \
+    shaders/Light.fsh

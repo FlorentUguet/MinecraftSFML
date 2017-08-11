@@ -11,6 +11,10 @@ Renderer::Renderer(int w, int h, std::string title) :sf::RenderWindow(sf::VideoM
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
+
+    //Enable Lighting
+    glEnable(GL_LIGHT0);
+
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
 }

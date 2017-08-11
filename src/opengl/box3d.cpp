@@ -25,18 +25,22 @@ void Box3D::init()
             break;
         case Sides::BOTTOM:
             plane->translate(0,-0.5,0);
+            plane->rotate(-90.0f);
             break;
         case Sides::LEFT:
             plane->translate(-0.5,0,0);
+            plane->rotate(0.f,-90.0f);
             break;
         case Sides::RIGHT:
             plane->translate(0.5,0,0);
+            plane->rotate(0.f,90.0f);
             break;
         case Sides::FRONT:
             plane->translate(0,0,0);
             break;
         case Sides::BACK:
             plane->translate(0,0,-1.0);
+            plane->rotate(0.f,180.0f);
             break;
         }
     }
