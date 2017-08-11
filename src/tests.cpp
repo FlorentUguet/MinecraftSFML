@@ -17,6 +17,34 @@ void Tests::MatriceOperationsTiming(int number)
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(done-started).count() << "us for " << number << " operations" << std::endl;
 }
 
+void Tests::TestBlock(Renderer *r)
+{
+    OpenGLEntity *e = new OpenGLEntity();
+    e->show();
+
+    Box3D *b = new Box3D(e);
+    b->init();
+    TestEntity(r,e);
+}
+
+void Tests::TestShapes(Renderer *r)
+{
+    OpenGLEntity *e = new OpenGLEntity();
+    e->show();
+
+    Plane2D *p = new Plane2D(e);
+    p->translate(0.f,0.f,1.f);
+    p->init();
+
+
+    Triangle2D *t = new Triangle2D(e);
+    t->translate(0.f,0.f,-1.f);
+    t->init();
+
+    TestEntity(r,e);
+}
+
+
 void Tests::TestEntity(Renderer *r, OpenGLEntity *e)
 {
     std::cout << "Loading shaders" << std::endl;
@@ -38,7 +66,7 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e)
     s->setRoot(e);
 
     std::cout << "Running" << std::endl;
-    r->start();
+    r->start(60);
 
     while(r->isOpen())
     {

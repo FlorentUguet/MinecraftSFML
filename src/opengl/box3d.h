@@ -2,6 +2,17 @@
 #define BOX3D_H
 
 #include "openglentity.h"
+#include "plane2d.h"
+
+enum Sides{
+    TOP = 0,
+    BOTTOM,
+    LEFT,
+    RIGHT,
+    FRONT,
+    BACK,
+    COUNT
+};
 
 class Box3D : public OpenGLEntity
 {

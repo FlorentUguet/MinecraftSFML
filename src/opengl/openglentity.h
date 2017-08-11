@@ -32,6 +32,8 @@ public:
     void loadBuffer();
 
     void translate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+    void rotate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+
     glm::mat4 getTransformedMatrix();
 
     void addVertice(GLfloat x, GLfloat y, GLfloat z);
@@ -50,7 +52,8 @@ protected:
     std::vector<OpenGLEntity*> children;
     std::vector<GLfloat> vertices;
 
-    glm::vec3 translation;
+    glm::vec3 translation = glm::vec3(0.0f);
+    glm::vec3 rotation = glm::vec3(0.0f);
 
     GLuint vbo = 0;
     OpenGLTexture *texture = 0;

@@ -22,7 +22,7 @@ public:
     void setScene(Scene *s);
 
     void setProgram(GLuint programID);
-    void start();
+    void start(int fps);
     void stop();
     void update();
 
@@ -40,7 +40,7 @@ private:
     sf::Font font;
 };
 
-void renderingThread(Renderer* renderer);
+void renderingThread(Renderer* renderer, int fps);
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 
 #endif // RENDERER_H

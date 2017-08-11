@@ -2,8 +2,6 @@
 #include <SFML/Config.hpp>
 
 #include "controller/renderer.h"
-#include "opengl/triangle2d.h"
-#include "opengl/plane2d.h"
 
 #include "tests.h"
 
@@ -22,21 +20,6 @@ int main()
     //OpenGL version
     std::cout << "OpenGL Version : " << settings.majorVersion << "." << settings.minorVersion << std::endl;
 
-    OpenGLEntity *e = new OpenGLEntity();
-    e->show();
-
-
-    Plane2D *p = new Plane2D(e);
-    p->translate(0.f,0.f,1.f);
-    p->init();
-
-
-    Triangle2D *t = new Triangle2D(e);
-    t->translate(0.f,0.f,-1.f);
-    t->init();
-
-    Tests::TestEntity(r,e);
-
-
+    Tests::TestBlock(r);
     return 0;
 }
