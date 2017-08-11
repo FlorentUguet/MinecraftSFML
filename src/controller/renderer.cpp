@@ -29,6 +29,11 @@ void Renderer::setProgram(GLuint programID)
     this->programID = programID;
 }
 
+GLuint Renderer::getProgramID()
+{
+    return this->programID;
+}
+
 void Renderer::start(int fps)
 {
     this->setActive(false);

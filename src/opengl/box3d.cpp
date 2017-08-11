@@ -7,7 +7,6 @@ Box3D::Box3D(int x, int y, int z, OpenGLEntity* parent) : Box3D(parent)
 
 Box3D::Box3D(OpenGLEntity *parent) : OpenGLEntity(parent)
 {
-    init();
 }
 
 void Box3D::init()
@@ -43,7 +42,14 @@ void Box3D::init()
             plane->rotate(0.f,180.0f);
             break;
         }
+
+        this->sides[i] = plane;
     }
 
     loadBuffer();
+}
+
+void Box3D::setTextureSide(int side, OpenGLTexture* tex)
+{
+    this->sides[side]->setTexture(tex);
 }

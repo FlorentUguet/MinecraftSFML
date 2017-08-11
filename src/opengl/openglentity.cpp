@@ -9,6 +9,7 @@ OpenGLEntity::OpenGLEntity(OpenGLEntity *parent)
 OpenGLEntity::~OpenGLEntity()
 {
     glDeleteBuffers(1, &this->vbo);
+    glDeleteBuffers(1, &this->vboTexture);
 }
 
 void OpenGLEntity::setParent(OpenGLEntity* parent)
@@ -40,12 +41,25 @@ void OpenGLEntity::init()
     loadBuffer();
 }
 
+void OpenGLEntity::addVertice(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v)
+{
+    addVertice(x, y, z);
+    addTexCoord(u,v);
+}
+
 void OpenGLEntity::addVertice(GLfloat x, GLfloat y, GLfloat z)
 {
     this->vertices.push_back(x);
     this->vertices.push_back(y);
     this->vertices.push_back(z);
+
     this->verticesCount++;
+}
+
+void OpenGLEntity::addTexCoord(GLfloat u, GLfloat v)
+{
+    this->textureCoordinates.push_back(u);
+    this->textureCoordinates.push_back(v);
 }
 
 void OpenGLEntity::setTexture(OpenGLTexture *texture)
@@ -68,6 +82,18 @@ void OpenGLEntity::loadBuffer()
 
         this->loaded = true;
     }
+
+    if(this->textureCoordinates.size() != 0)
+    {
+        GLfloat g_vertex_buffer_data[this->textureCoordinates.size()];
+        std::copy(this->textureCoordinates.begin(),this->textureCoordinates.end(),g_vertex_buffer_data);
+
+        glGenBuffers(1, &this->vboTexture);
+        // The following commands will talk about our 'vertexbuffer' buffer
+        glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
+        // Give our vertices to OpenGL.
+        glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+    }
 }
 
 void OpenGLEntity::translate(float x, float y, float z)
@@ -86,8 +112,8 @@ glm::mat4 OpenGLEntity::getTransformedMatrix()
     glm::mat4 scaled = glm::scale(source,glm::vec3(1.0f));
 
     glm::mat4 rotated = glm::rotate(scaled,this->rotation.x, glm::vec3(1,0,0));
-    rotated = glm::rotate(scaled,this->rotation.y, glm::vec3(0,1,0));
-    rotated = glm::rotate(scaled,this->rotation.z, glm::vec3(0,0,1));
+    rotated = glm::rotate(rotated,this->rotation.y, glm::vec3(0,1,0));
+    rotated = glm::rotate(rotated,this->rotation.z, glm::vec3(0,0,1));
 
     glm::mat4 translated = glm::translate(rotated,this->translation);
     return translated;
@@ -101,6 +127,9 @@ void OpenGLEntity::draw(Scene *scene)
     if(this->loaded)
     {
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        //Vertices
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
         glVertexAttribPointer(
            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
@@ -110,9 +139,29 @@ void OpenGLEntity::draw(Scene *scene)
            0,                  // stride
            (void*)0            // array buffer offset
         );
+
+        if(this->vboTexture > 0)
+        {
+            //glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D,this->texture->getId());
+            //Texture
+            glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
+            glVertexAttribPointer(
+               1,
+               TEXTURE_COORD_SIZE, // size
+               GL_FLOAT,           // type
+               GL_FALSE,           // normalized?
+               0,                  // stride
+               (void*)0            // array buffer offset
+            );
+        }
+
         // Draw the triangle !
         glDrawArrays(GL_TRIANGLES, 0, verticesCount);
         glBindBuffer(GL_ARRAY_BUFFER,0);
+
+        //Disable the attributes
+        glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(0);
     }
 

@@ -18,6 +18,7 @@ class Scene;
 #include "scene.h"
 
 #define VERTICE_SIZE 3
+#define TEXTURE_COORD_SIZE 2
 
 class OpenGLEntity
 {
@@ -36,7 +37,10 @@ public:
 
     glm::mat4 getTransformedMatrix();
 
+    void addVertice(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
     void addVertice(GLfloat x, GLfloat y, GLfloat z);
+    void addTexCoord(GLfloat u, GLfloat v);
+
     void setTexture(OpenGLTexture *texture);
 
     void hide();
@@ -50,12 +54,16 @@ protected:
 
     OpenGLEntity *parent = 0;
     std::vector<OpenGLEntity*> children;
+
     std::vector<GLfloat> vertices;
+    std::vector<GLfloat> textureCoordinates;
 
     glm::vec3 translation = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
 
     GLuint vbo = 0;
+    GLuint vboTexture = 0;
+
     OpenGLTexture *texture = 0;
 
     int verticesCount = 0;

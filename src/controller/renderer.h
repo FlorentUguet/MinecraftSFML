@@ -30,6 +30,8 @@ public:
 
     bool isRunning();
 
+    GLuint getProgramID();
+
 private:
     GLuint programID = 0;
 

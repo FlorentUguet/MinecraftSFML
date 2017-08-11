@@ -44,8 +44,12 @@ glm::mat4 Scene::calculateMVP(OpenGLEntity *e)
 
 void Scene::draw()
 {
+    glGetError();
     this->root->draw(this);
+    glGetError();
 
+    /*
     std::string errors = GLUtils::GetErrors();
     if(!errors.empty()) std::cout << "Errors : " << errors  << std::endl;
+    */
 }

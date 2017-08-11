@@ -20,8 +20,10 @@ public:
     Box3D(int x, int y, int z, OpenGLEntity* parent = nullptr);
     Box3D(OpenGLEntity* parent = nullptr);
     void init();
+    void setTextureSide(int side, OpenGLTexture *tex);
 
 private:
+    OpenGLEntity *sides[Sides::COUNT];
 };
 
 #endif // BOX3D_H
