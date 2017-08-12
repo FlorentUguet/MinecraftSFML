@@ -47,15 +47,7 @@ void Box3D::init()
         }
 
         this->sides[i] = plane;
-        this->sides[i]->hide();
     }
-
-    this->sides[Sides::TOP]->show();
-    this->sides[Sides::BOTTOM]->show();
-    this->sides[Sides::LEFT]->show();
-    this->sides[Sides::RIGHT]->show();
-    this->sides[Sides::FRONT]->show();
-    this->sides[Sides::BACK]->show();
 
     loadBuffer();
 }
