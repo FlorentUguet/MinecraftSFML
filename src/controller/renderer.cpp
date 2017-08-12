@@ -1,6 +1,6 @@
 #include "renderer.h"
 
-Renderer::Renderer(int w, int h, std::string title) :sf::RenderWindow(sf::VideoMode(w,h),title)
+Renderer::Renderer(int w, int h, std::string title) :sf::RenderWindow(sf::VideoMode(w,h),title,sf::Style::Default,sf::ContextSettings(24))
 {
     this->run = false;
 
@@ -8,15 +8,6 @@ Renderer::Renderer(int w, int h, std::string title) :sf::RenderWindow(sf::VideoM
     {
         std::cout << "Could not load font" << std::endl;
     }
-
-    // Enable depth test
-    glEnable(GL_DEPTH_TEST);
-
-    //Enable Lighting
-    glEnable(GL_LIGHT0);
-
-    // Accept fragment if it closer to the camera than the former one
-    glDepthFunc(GL_LESS);
 }
 
 void Renderer::setScene(Scene *s)
@@ -86,6 +77,9 @@ void Renderer::drawLatency(int us)
 void renderingThread(Renderer* renderer, int fps)
 {
     renderer->setActive(true);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
     while(renderer->isOpen() && renderer->isRunning())
     {

@@ -19,6 +19,7 @@ class Scene;
 
 #define VERTICE_SIZE 3
 #define TEXTURE_COORD_SIZE 2
+#define DEFAULT_SCALE 1.0
 
 class OpenGLEntity
 {
@@ -34,6 +35,7 @@ public:
 
     void translate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
     void rotate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+    void scale(float scale = DEFAULT_SCALE);
 
     glm::mat4 getTransformedMatrix();
 
@@ -60,6 +62,7 @@ protected:
 
     glm::vec3 translation = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
+    glm::vec3 scaleVec = glm::vec3(DEFAULT_SCALE);
 
     GLuint vbo = 0;
     GLuint vboTexture = 0;

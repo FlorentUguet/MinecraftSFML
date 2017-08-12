@@ -8,10 +8,10 @@
 class OpenGLEntity;
 #include "openglentity.h"
 
-#define SCENE_RATIO (4.0/3.0)
-#define SCENE_FOV 60.0
-#define SCENE_NEAR 0.1
-#define SCENE_FAR 100.0
+#define SCENE_RATIO (4.0f/3.0f)
+#define SCENE_FOV 60.0f
+#define SCENE_NEAR 1.0f
+#define SCENE_FAR 100.0f
 
 class Scene
 {
@@ -32,7 +32,6 @@ public:
 private:
     OpenGLEntity* root;
 
-    sf::Window *parent;
     glm::mat4 projectionMatrix;
     glm::mat4 viewMatrix;
 

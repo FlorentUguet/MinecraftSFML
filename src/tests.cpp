@@ -72,7 +72,7 @@ void Tests::TestTexture(Renderer *r, std::string file0, std::string file1)
     TestEntity(r,e);
 }
 
-void Tests::TestBlock(Renderer *r, std::string texSide, std::string texBottom, std::string texTop)
+void Tests::TestBlocks(Renderer *r, std::string texSide, std::string texBottom, std::string texTop)
 {
     OpenGLEntity *e = new OpenGLEntity();
     e->show();
@@ -81,15 +81,30 @@ void Tests::TestBlock(Renderer *r, std::string texSide, std::string texBottom, s
     OpenGLTexture *textureBottom = new OpenGLTexture(texBottom);
     OpenGLTexture *textureSide = new OpenGLTexture(texSide);
 
-    Box3D *b = new Box3D(e);
-    b->init();
+    Box3D *b1 = new Box3D(e);
+    b1->init();
 
-    b->setTextureSide(Sides::TOP, textureTop);
-    b->setTextureSide(Sides::BOTTOM, textureBottom);
-    b->setTextureSide(Sides::LEFT, textureSide);
-    b->setTextureSide(Sides::RIGHT, textureSide);
-    b->setTextureSide(Sides::FRONT, textureSide);
-    b->setTextureSide(Sides::BACK, textureSide);
+    b1->setTextureSide(Sides::TOP, textureTop);
+    b1->setTextureSide(Sides::BOTTOM, textureBottom);
+    b1->setTextureSide(Sides::LEFT, textureSide);
+    b1->setTextureSide(Sides::RIGHT, textureSide);
+    b1->setTextureSide(Sides::FRONT, textureSide);
+    b1->setTextureSide(Sides::BACK, textureSide);
+
+    b1->translate(0.0f,0.0f,-1.0f);
+    b1->scale(0.5f);
+
+    Box3D *b2 = new Box3D(e);
+    b2->init();
+
+    b2->setTextureSide(Sides::TOP, textureTop);
+    b2->setTextureSide(Sides::BOTTOM, textureBottom);
+    b2->setTextureSide(Sides::LEFT, textureSide);
+    b2->setTextureSide(Sides::RIGHT, textureSide);
+    b2->setTextureSide(Sides::FRONT, textureSide);
+    b2->setTextureSide(Sides::BACK, textureSide);
+
+    b2->scale(0.5f);
 
     //Shaders
     GLuint fragmentID = GLUtils::LoadShader("shaders/TextureFSH.fsh", GL_FRAGMENT_SHADER);
@@ -136,7 +151,7 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e)
     }
 
     std::cout << "Initializing models" << std::endl;
-    Scene *s = new Scene(60.0f,float(r->getSize().x) / float(r->getSize().y),0.1f,100.0f);
+    Scene *s = new Scene(60.0f,float(r->getSize().x) / float(r->getSize().y));
     s->setVertexShader(r->getProgramID());
 
     r->setScene(s);

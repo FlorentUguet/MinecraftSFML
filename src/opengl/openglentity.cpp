@@ -104,19 +104,27 @@ void OpenGLEntity::translate(float x, float y, float z)
 void OpenGLEntity::rotate(float x, float y, float z)
 {
     this->rotation = glm::vec3(glm::radians(x),glm::radians(y),glm::radians(z));
+    //this->rotation = glm::vec3(x,y,z);
+}
+
+void OpenGLEntity::scale(float scale)
+{
+    this->scaleVec = glm::vec3(scale);
 }
 
 glm::mat4 OpenGLEntity::getTransformedMatrix()
 {
-    glm::mat4 source = this->parent == 0 ? glm::mat4(1.0f) : this->parent->getTransformedMatrix();
-    glm::mat4 scaled = glm::scale(source,glm::vec3(1.0f));
+    glm::mat4 scaled = glm::scale(glm::mat4(1.0f),this->scaleVec);
 
-    glm::mat4 rotated = glm::rotate(scaled,this->rotation.x, glm::vec3(1,0,0));
+    glm::mat4 rotated = glm::rotate(glm::mat4(1.0f),this->rotation.x, glm::vec3(1,0,0));
     rotated = glm::rotate(rotated,this->rotation.y, glm::vec3(0,1,0));
     rotated = glm::rotate(rotated,this->rotation.z, glm::vec3(0,0,1));
 
-    glm::mat4 translated = glm::translate(rotated,this->translation);
-    return translated;
+    glm::mat4 source = this->parent == 0 ? glm::mat4(1.0f) : this->parent->getTransformedMatrix();
+    glm::mat4 translated = glm::translate(source,this->translation);
+
+    glm::mat4 final = translated * rotated * scaled;
+    return final;
 }
 
 void OpenGLEntity::draw(Scene *scene)

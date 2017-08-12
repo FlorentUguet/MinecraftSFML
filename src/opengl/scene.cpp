@@ -7,7 +7,9 @@ Scene::Scene(float fov, float ratio, float near, float far)
 
 void Scene::setPerspective(float fov, float ratio, float near, float far)
 {
-    this->projectionMatrix = glm::perspective(glm::radians(fov),ratio,near,far);
+    float rad = glm::radians(fov);
+    this->projectionMatrix = glm::perspective(rad,ratio,near,far);
+    gluPerspective(rad,ratio,near,far);
 }
 
 void Scene::setRoot(OpenGLEntity* e)

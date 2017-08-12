@@ -21,7 +21,7 @@ int main()
     std::cout << "OpenGL Version : " << settings.majorVersion << "." << settings.minorVersion << std::endl;
 
     //Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
-    Tests::TestBlock(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
+    Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestTexturePlacement(r,"textures/dirt-side.jpg");
 
     return 0;
