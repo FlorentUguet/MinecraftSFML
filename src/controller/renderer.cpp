@@ -1,13 +1,21 @@
 #include "renderer.h"
 
-Renderer::Renderer(int w, int h, std::string title) :sf::RenderWindow(sf::VideoMode(w,h),title,sf::Style::Default,sf::ContextSettings(24))
+Renderer::Renderer(int w, int h)
 {
     this->run = false;
+    this->w = w;
+    this->h = h;
+}
 
-    if (!this->font.loadFromFile("fonts/arial.ttf"))
-    {
-        std::cout << "Could not load font" << std::endl;
-    }
+std::string Renderer::getOpenGlInfo()
+{
+    std::ostringstream oss;
+    oss << "GL_VENDOR : " << glGetString(GL_VENDOR) << std::endl;
+    oss << "GL_RENDERER : " << glGetString(GL_RENDERER) << std::endl;
+    oss << "GL_VERSION : " << glGetString(GL_VERSION) << std::endl;
+    oss << "GL_SHADING_LANGUAGE_VERSION : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+    return oss.str();
 }
 
 void Renderer::setScene(Scene *s)
@@ -27,7 +35,6 @@ GLuint Renderer::getProgramID()
 
 void Renderer::start(int fps)
 {
-    this->setActive(false);
     this->thread = new std::thread(renderingThread,this,fps);
     this->run = true;
 }
@@ -42,6 +49,17 @@ bool Renderer::isRunning()
     return this->run;
 }
 
+bool Renderer::isInitialized()
+{
+    return this->initialized;
+}
+
+void Renderer::init()
+{
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+}
+
 void Renderer::update()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,35 +71,26 @@ void Renderer::update()
     this->scene->draw();
     auto done = std::chrono::high_resolution_clock::now();
 
-    //SFML
     glUseProgram(0);
 
-    // Draw the text
-    //drawLatency(std::chrono::duration_cast<std::chrono::microseconds>(done-started).count());
-
-    this->display();
+    this->renderFrame();
 }
 
-void Renderer::drawLatency(int us)
+
+int Renderer::getWidth()
 {
-    std::ostringstream oss;
-    oss << us/1000 << "." << us%1000 << " ms";
-
-    sf::Text text = sf::Text(oss.str(),this->font,10);
-    text.setColor(sf::Color::White);
-
-    //std::cout << oss.str() << std::endl;
-    this->draw(text);
+    return this->w;
 }
+
+int Renderer::getHeight()
+{
+    return this->h;
+}
+
 
 void renderingThread(Renderer* renderer, int fps)
 {
-    renderer->setActive(true);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    while(renderer->isOpen() && renderer->isRunning())
+    while(renderer->isRunning())
     {
         renderer->update();
     }

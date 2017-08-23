@@ -24,7 +24,8 @@ SOURCES += main.cpp \
     tests.cpp \
     opengl/glutils.cpp \
     opengl/opengltexture.cpp \
-    opengl/scene.cpp
+    opengl/scene.cpp \
+    controller/renderersdl.cpp
 
 HEADERS += \
     znoise/Enums.hpp \
@@ -48,7 +49,9 @@ HEADERS += \
     tests.h \
     opengl/glutils.h \
     opengl/opengltexture.h \
-    opengl/scene.h
+    opengl/scene.h \
+    controller/renderersdl.h \
+    opengl.h
 
 #Threading Linux
 unix: LIBS += -lpthread
@@ -57,12 +60,15 @@ unix: LIBS += -lpthread
 win32: LIBS += -lopengl32 -lglu32
 else:unix: LIBS+= -lGL -lGLU
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/  -lsfml-graphics -lsfml-window -lsfml-system
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/ -lsfml-graphics-d -lsfml-window-d -lsfml-system-d
-else:unix: LIBS += -lsfml-graphics -lsfml-window -lsfml-system
+/#SFML
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/  -lsfml-graphics -lsfml-window -lsfml-system
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/ -lsfml-graphics-d -lsfml-window-d -lsfml-system-d
+#else:unix: LIBS += -lsfml-graphics -lsfml-window -lsfml-system
+#INCLUDEPATH += $$PWD/../lib/SFML-2.4.2/include
+#DEPENDPATH += $$PWD/../lib/SFML-2.4.2/include
 
-INCLUDEPATH += $$PWD/../lib/SFML-2.4.2/include
-DEPENDPATH += $$PWD/../lib/SFML-2.4.2/include
+#SDL
+unix: LIBS += -lSDL2 -lSDL2main -lSDL2_image
 
 #GLEW
 win32: LIBS += -L$$PWD/../lib/glew-2.1.0/lib/ -lglew32 -lglew32.dll

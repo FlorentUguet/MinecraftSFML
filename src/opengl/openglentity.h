@@ -5,8 +5,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include <GL/glew.h>
-#include <SFML/OpenGL.hpp>
+#include "opengl.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>

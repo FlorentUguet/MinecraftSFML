@@ -103,20 +103,11 @@ std::string GLUtils::GetErrors()
         case GL_INVALID_OPERATION:
             oss << "GL_INVALID_OPERATION";
             break;
-        case GL_STACK_OVERFLOW:
-            oss << "GL_STACK_OVERFLOW";
-            break;
-        case GL_STACK_UNDERFLOW:
-            oss << "GL_STACK_UNDERFLOW";
-            break;
         case GL_OUT_OF_MEMORY:
             oss << "GL_OUT_OF_MEMORY";
             break;
         case GL_INVALID_FRAMEBUFFER_OPERATION:
             oss << "GL_INVALID_FRAMEBUFFER_OPERATION";
-            break;
-        case GL_CONTEXT_LOST:
-            oss << "GL_CONTEXT_LOST";
             break;
         default:
             oss << "Unhandled error";

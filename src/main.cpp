@@ -1,28 +1,42 @@
 #include <iostream>
-#include <SFML/Config.hpp>
 
-#include "controller/renderer.h"
+#include "opengl.h"
 
+#include "controller/renderersdl.h"
 #include "tests.h"
+
+#include <SDL2/SDL.h>
+#include <iostream>
+#include <string>
 
 int main()
 {
-    std::cout << "SFML Version : " << SFML_VERSION_MAJOR << "." << SFML_VERSION_MINOR << "." << SFML_VERSION_PATCH << std::endl;
 
-    //Tests::MatriceOperationsTiming(10000);
+    RendererSDL *r = new RendererSDL(800,600,"Renderer");
+
+    if(!r->isInitialized())
+    {
+        std::cout << "The renderer could not be initialized properly" << std::endl;
+        return -1;
+    }
 
 
-    Renderer *r = new Renderer(800,600,"Renderer");
-    r->setVerticalSyncEnabled(true);
-    glewInit();
+    #ifdef WIN32
+    int res = glewInit();
 
-    sf::ContextSettings settings = r->getSettings();
-    //OpenGL version
-    std::cout << "OpenGL Version : " << settings.majorVersion << "." << settings.minorVersion << std::endl;
+    if(res != GLEW_OK){
+        std::cout << "GLEW did not initialize properly : " << glewGetErrorString(res) << std::endl;
+        return -1;
+    }
+    #endif
 
+    std::cout << r->getOpenGlInfo() << std::endl;
+
+    Tests::TestShapes(r);
     //Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
-    Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
+    //Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestTexturePlacement(r,"textures/dirt-side.jpg");
 
+    std::cout << "Closing Main loop" << std::endl;
     return 0;
 }

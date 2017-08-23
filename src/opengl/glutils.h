@@ -1,9 +1,7 @@
 #ifndef GLUTILS_H
 #define GLUTILS_H
 
-#include <GL/glew.h>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
+#include "opengl.h"
 
 #include "opengl/openglentity.h"
 

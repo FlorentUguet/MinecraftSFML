@@ -148,7 +148,7 @@ void OpenGLEntity::draw(Scene *scene)
            (void*)0            // array buffer offset
         );
 
-        if(this->vboTexture > 0)
+        if(this->vboTexture > 0 && this->texture != 0)
         {
             //glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D,this->texture->getId());

@@ -151,38 +151,19 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e)
     }
 
     std::cout << "Initializing models" << std::endl;
-    Scene *s = new Scene(60.0f,float(r->getSize().x) / float(r->getSize().y));
+    Scene *s = new Scene(60.0f,float(r->getWidth()) / float(r->getHeight()));
     s->setVertexShader(r->getProgramID());
 
     r->setScene(s);
     s->setRoot(e);
 
     std::cout << "Running" << std::endl;
-    r->start(60);
+    //r->start(60);
 
-    while(r->isOpen())
+    while(r->isRunning())
     {
-        sf::Event event;
-        while (r->pollEvent(event))
-        {
-            // on regarde le type de l'évènement...
-            switch (event.type)
-            {
-                // fenêtre fermée
-                case sf::Event::Closed:
-                    r->close();
-                    break;
-
-                // touche pressée
-                case sf::Event::KeyPressed:
-                    if (event.key.code == sf::Keyboard::Escape) r->close();
-                    break;
-
-                // on ne traite pas les autres types d'évènements
-                default:
-                    break;
-            }
-        }
+        r->processInputs();
+        r->update();
     }
 
     std::cout << "Exiting" << std::endl;
