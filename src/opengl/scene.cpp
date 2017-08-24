@@ -9,7 +9,6 @@ void Scene::setPerspective(float fov, float ratio, float near, float far)
 {
     float rad = glm::radians(fov);
     this->projectionMatrix = glm::perspective(rad,ratio,near,far);
-    gluPerspective(rad,ratio,near,far);
 }
 
 void Scene::setRoot(OpenGLEntity* e)
@@ -46,12 +45,5 @@ glm::mat4 Scene::calculateMVP(OpenGLEntity *e)
 
 void Scene::draw()
 {
-    glGetError();
     this->root->draw(this);
-    glGetError();
-
-    /*
-    std::string errors = GLUtils::GetErrors();
-    if(!errors.empty()) std::cout << "Errors : " << errors  << std::endl;
-    */
 }

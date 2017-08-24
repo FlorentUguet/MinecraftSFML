@@ -158,13 +158,18 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e)
     s->setRoot(e);
 
     std::cout << "Running" << std::endl;
-    //r->start(60);
+    r->start(60);
+
+    GLUtils::OutputErrors("Initialization");
 
     while(r->isRunning())
     {
         r->processInputs();
         r->update();
+
+        GLUtils::OutputErrors("Loop");
     }
+
 
     std::cout << "Exiting" << std::endl;
 }

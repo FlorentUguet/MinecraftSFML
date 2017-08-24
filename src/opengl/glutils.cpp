@@ -83,6 +83,16 @@ GLuint GLUtils::LoadShaders(const char * vertex_file_path,const char * fragment_
     return LoadShaders(vertex,fragment);
 }
 
+void GLUtils::OutputErrors(std::string label)
+{
+    std::string errors = GetErrors();
+
+    if(!errors.empty())
+    {
+        std::cout << "OpenGL error on " << label << " : " << errors << std::endl;
+    }
+}
+
 std::string GLUtils::GetErrors()
 {
     std::ostringstream oss;

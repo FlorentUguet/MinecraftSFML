@@ -64,6 +64,7 @@ protected:
     glm::vec3 scaleVec = glm::vec3(DEFAULT_SCALE);
 
     GLuint vbo = 0;
+    GLuint vao = 0;
     GLuint vboTexture = 0;
 
     OpenGLTexture *texture = 0;

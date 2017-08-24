@@ -10,6 +10,7 @@ OpenGLEntity::~OpenGLEntity()
 {
     glDeleteBuffers(1, &this->vbo);
     glDeleteBuffers(1, &this->vboTexture);
+    glDeleteVertexArrays(1,&this->vao);
 }
 
 void OpenGLEntity::setParent(OpenGLEntity* parent)
@@ -71,6 +72,7 @@ void OpenGLEntity::loadBuffer()
 {
     if(this->vertices.size() != 0)
     {
+        //VBO
         GLfloat g_vertex_buffer_data[this->vertices.size()];
         std::copy(this->vertices.begin(),this->vertices.end(),g_vertex_buffer_data);
 
@@ -81,18 +83,46 @@ void OpenGLEntity::loadBuffer()
         glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
         this->loaded = true;
-    }
 
-    if(this->textureCoordinates.size() != 0)
-    {
-        GLfloat g_vertex_buffer_data[this->textureCoordinates.size()];
-        std::copy(this->textureCoordinates.begin(),this->textureCoordinates.end(),g_vertex_buffer_data);
+        GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO)");
 
-        glGenBuffers(1, &this->vboTexture);
-        // The following commands will talk about our 'vertexbuffer' buffer
-        glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
-        // Give our vertices to OpenGL.
-        glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+        if(this->textureCoordinates.size() != 0)
+        {
+            GLfloat g_vertex_buffer_data[this->textureCoordinates.size()];
+            std::copy(this->textureCoordinates.begin(),this->textureCoordinates.end(),g_vertex_buffer_data);
+
+            glGenBuffers(1, &this->vboTexture);
+            // The following commands will talk about our 'vertexbuffer' buffer
+            glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
+            // Give our vertices to OpenGL.
+            glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+            GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO Texture)");
+        }
+
+        //VAO
+        glGenVertexArrays(1, &this->vao);
+        glBindVertexArray(this->vao);
+
+        //VBO
+            glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+                //Vertices
+                glVertexAttribPointer(0, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
+                glEnableVertexAttribArray(0);
+
+            glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
+                //Texture
+                if(this->vboTexture != 0)
+                {
+                    glVertexAttribPointer(1, TEXTURE_COORD_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
+                    glEnableVertexAttribArray(1);
+                }
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glBindVertexArray(0);
+
+        GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VAO)");
     }
 }
 
@@ -129,13 +159,22 @@ glm::mat4 OpenGLEntity::getTransformedMatrix()
 
 void OpenGLEntity::draw(Scene *scene)
 {
-    glm::mat4 mvp = scene->calculateMVP(this);
+    glm::mat4 mvp = scene->calculateMVP(this); 
+    GLUtils::OutputErrors("draw->glUniformMatrix4fv->before");
     glUniformMatrix4fv(scene->getMVPId(), 1, GL_FALSE, &mvp[0][0]);
+    GLUtils::OutputErrors("draw->glUniformMatrix4fv->after");
 
     if(this->loaded)
     {
+        glBindVertexArray(this->vao);
+        glDrawArrays(GL_TRIANGLES, 0, verticesCount);
+        glBindVertexArray(0);
+        GLUtils::OutputErrors("draw->glDrawArrays");
+
+        /*
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+        GLUtils::OutputErrors("draw->glEnableVertexAttribArray");
 
         //Vertices
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
@@ -147,6 +186,8 @@ void OpenGLEntity::draw(Scene *scene)
            0,                  // stride
            (void*)0            // array buffer offset
         );
+
+        GLUtils::OutputErrors("draw->glVertexAttribPointer");
 
         if(this->vboTexture > 0 && this->texture != 0)
         {
@@ -168,9 +209,14 @@ void OpenGLEntity::draw(Scene *scene)
         glDrawArrays(GL_TRIANGLES, 0, verticesCount);
         glBindBuffer(GL_ARRAY_BUFFER,0);
 
+        GLUtils::OutputErrors("draw->glDrawArrays");
+
         //Disable the attributes
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(0);
+
+        GLUtils::OutputErrors("draw->glDisableVertexAttribArray");
+        */
     }
 
     for(int i=0;i<this->children.size();i++)

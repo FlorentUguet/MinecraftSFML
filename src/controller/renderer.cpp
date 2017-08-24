@@ -35,7 +35,7 @@ GLuint Renderer::getProgramID()
 
 void Renderer::start(int fps)
 {
-    this->thread = new std::thread(renderingThread,this,fps);
+    //this->thread = new std::thread(renderingThread,this,fps);
     this->run = true;
 }
 

@@ -76,5 +76,4 @@ bool RendererSDL::isOpen()
 void RendererSDL::renderFrame()
 {
     SDL_GL_SwapWindow(this->window);
-    std::cout << "Drawing window" << std::endl;
 }
