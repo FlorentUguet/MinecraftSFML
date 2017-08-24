@@ -32,8 +32,8 @@ int main()
 
     std::cout << r->getOpenGlInfo() << std::endl;
 
-    Tests::TestShapes(r);
-    //Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
+    //Tests::TestShapes(r);
+    Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
     //Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestTexturePlacement(r,"textures/dirt-side.jpg");
 

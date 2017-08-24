@@ -14,7 +14,7 @@ GLuint OpenGLTexture::getId()
 }
 void OpenGLTexture::load(std::string file)
 {
-
+    this->id = LoadTexture(file);
 }
 
 GLuint OpenGLTexture::LoadTexture(std::string file)
@@ -29,7 +29,7 @@ GLuint OpenGLTexture::LoadTexture(std::string file)
     }
     else
     {
-        std::cout << "Error loading texture " << file << std::endl;
+        std::cout << "Error loading texture " << file << " : " << IMG_GetError() << std::endl;
         return 0;
     }
 }

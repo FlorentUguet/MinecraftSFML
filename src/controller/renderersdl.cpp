@@ -7,6 +7,11 @@ RendererSDL::RendererSDL(int w, int h, std::string title) : Renderer(w,h)
         return;
     }
 
+    if (IMG_Init(IMG_INIT_JPG) < 0){
+        std::cout << IMG_GetError() << std::endl;
+        return;
+    }
+
     // Version d'OpenGL
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -45,6 +50,7 @@ RendererSDL::RendererSDL(int w, int h, std::string title) : Renderer(w,h)
 RendererSDL::~RendererSDL()
 {
     SDL_DestroyWindow(this->window);
+    IMG_Quit();
     SDL_Quit();
 }
 
