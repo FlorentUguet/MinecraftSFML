@@ -11,12 +11,11 @@
 #include <sstream>
 #include <chrono>
 
-#include "opengl/openglentity.h"
-#include "opengl/scene.h"
-#include "opengl/glutils.h"
+#include "../opengl/openglentity.h"
+#include "../opengl/scene.h"
+#include "../opengl/glutils.h"
 
-#include "controller/renderer.h"
-
+#include "renderer.h"
 class RendererSDL : public Renderer
 {
 public:

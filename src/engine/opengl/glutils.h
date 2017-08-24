@@ -3,7 +3,7 @@
 
 #include "opengl.h"
 
-#include "opengl/openglentity.h"
+#include "openglentity.h"
 
 #include <iostream>
 #include <fstream>

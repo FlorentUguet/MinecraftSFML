@@ -2,7 +2,7 @@
 
 #include "opengl.h"
 
-#include "controller/renderersdl.h"
+#include "engine/controller/renderersdl.h"
 #include "tests.h"
 
 #include <SDL2/SDL.h>

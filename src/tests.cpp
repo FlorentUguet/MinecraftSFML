@@ -173,3 +173,8 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e)
 
     std::cout << "Exiting" << std::endl;
 }
+
+void Tests::TestTextureFileSDL(std::string path)
+{
+
+}
