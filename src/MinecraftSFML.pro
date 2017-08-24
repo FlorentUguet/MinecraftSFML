@@ -12,20 +12,20 @@ SOURCES += main.cpp \
     znoise/Perlin.cpp \
     znoise/Simplex.cpp \
     znoise/Worley.cpp \
-    opengl/box3d.cpp \
-    opengl/openglentity.cpp \
-    opengl/triangle2d.cpp \
+    engine/opengl/box3d.cpp \
+    engine/opengl/openglentity.cpp \
+    engine/opengl/triangle2d.cpp \
     entities/blockentity.cpp \
     entities/blocksideentity.cpp \
     entities/chunkentity.cpp \
     entities/mapentity.cpp \
-    controller/renderer.cpp \
-    opengl/plane2d.cpp \
+    engine/controller/renderer.cpp \
+    engine/opengl/plane2d.cpp \
     tests.cpp \
-    opengl/glutils.cpp \
-    opengl/opengltexture.cpp \
-    opengl/scene.cpp \
-    controller/renderersdl.cpp
+    engine/opengl/glutils.cpp \
+    engine/opengl/opengltexture.cpp \
+    engine/opengl/scene.cpp \
+    engine/controller/renderersdl.cpp
 
 HEADERS += \
     znoise/Enums.hpp \
@@ -37,20 +37,20 @@ HEADERS += \
     znoise/Perlin.hpp \
     znoise/Simplex.hpp \
     znoise/Worley.hpp \
-    opengl/box3d.h \
-    opengl/openglentity.h \
-    opengl/triangle2d.h \
+    engine/opengl/box3d.h \
+    engine/opengl/openglentity.h \
+    engine/opengl/triangle2d.h \
     entities/blockentity.h \
     entities/blocksideentity.h \
     entities/chunkentity.h \
     entities/mapentity.h \
-    controller/renderer.h \
-    opengl/plane2d.h \
+    engine/controller/renderer.h \
+    engine/opengl/plane2d.h \
     tests.h \
-    opengl/glutils.h \
-    opengl/opengltexture.h \
-    opengl/scene.h \
-    controller/renderersdl.h \
+    engine/opengl/glutils.h \
+    engine/opengl/opengltexture.h \
+    engine/opengl/scene.h \
+    engine/controller/renderersdl.h \
     opengl.h
 
 #Threading Linux
