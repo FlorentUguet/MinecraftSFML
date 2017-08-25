@@ -1,10 +1,10 @@
 #include "opengltexture.h"
 
-OpenGLTexture::OpenGLTexture(std::string file)
+OpenGLTexture::OpenGLTexture(std::string file, GLenum pixelType)
 {
     if(file != "")
     {
-        this->load(file);
+        this->load(file, pixelType);
     }
 }
 
@@ -12,12 +12,14 @@ GLuint OpenGLTexture::getId()
 {
     return this->id;
 }
-void OpenGLTexture::load(std::string file)
+void OpenGLTexture::load(std::string file, GLenum pixelType)
 {
-    this->id = LoadTexture(file);
+    this->file = file;
+    this->type = pixelType;
+    this->id = LoadTexture(file, pixelType);
 }
 
-GLuint OpenGLTexture::LoadTexture(std::string file)
+GLuint OpenGLTexture::LoadTexture(std::string file, GLenum pixelType)
 { 
     bool ok = true;
 
@@ -25,7 +27,7 @@ GLuint OpenGLTexture::LoadTexture(std::string file)
 
     if(s != 0)
     {
-        return LoadTexture(s->w, s->h, (unsigned char*)s->pixels);
+        return LoadTexture(s->w, s->h, (unsigned char*)s->pixels, pixelType);
     }
     else
     {
@@ -34,13 +36,16 @@ GLuint OpenGLTexture::LoadTexture(std::string file)
     }
 }
 
-GLuint OpenGLTexture::LoadTexture(int w, int h, unsigned char *pixels)
+GLuint OpenGLTexture::LoadTexture(int w, int h, unsigned char *pixels, GLenum pixelType)
 {
+    int s = sizeof(pixels);
+    int su = sizeof(unsigned char);
+
     GLuint textureID = 0;
     //parametrage de la texture
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, pixelType, w, h, pixelType, GL_UNSIGNED_BYTE, pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 

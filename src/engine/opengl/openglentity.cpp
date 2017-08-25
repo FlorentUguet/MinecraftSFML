@@ -166,57 +166,13 @@ void OpenGLEntity::draw(Scene *scene)
 
     if(this->loaded)
     {
+        if(this->texture != 0)
+            glBindTexture(GL_TEXTURE_2D,this->texture->getId());
+
         glBindVertexArray(this->vao);
         glDrawArrays(GL_TRIANGLES, 0, verticesCount);
         glBindVertexArray(0);
         GLUtils::OutputErrors("draw->glDrawArrays");
-
-        /*
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        GLUtils::OutputErrors("draw->glEnableVertexAttribArray");
-
-        //Vertices
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glVertexAttribPointer(
-           0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-           VERTICE_SIZE,       // size
-           GL_FLOAT,           // type
-           GL_FALSE,           // normalized?
-           0,                  // stride
-           (void*)0            // array buffer offset
-        );
-
-        GLUtils::OutputErrors("draw->glVertexAttribPointer");
-
-        if(this->vboTexture > 0 && this->texture != 0)
-        {
-            //glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D,this->texture->getId());
-            //Texture
-            glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
-            glVertexAttribPointer(
-               1,
-               TEXTURE_COORD_SIZE, // size
-               GL_FLOAT,           // type
-               GL_FALSE,           // normalized?
-               0,                  // stride
-               (void*)0            // array buffer offset
-            );
-        }
-
-        // Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0, verticesCount);
-        glBindBuffer(GL_ARRAY_BUFFER,0);
-
-        GLUtils::OutputErrors("draw->glDrawArrays");
-
-        //Disable the attributes
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(0);
-
-        GLUtils::OutputErrors("draw->glDisableVertexAttribArray");
-        */
     }
 
     for(int i=0;i<this->children.size();i++)

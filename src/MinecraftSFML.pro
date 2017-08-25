@@ -60,15 +60,12 @@ unix: LIBS += -lpthread
 win32: LIBS += -lopengl32 -lglu32
 else:unix: LIBS+= -lGL -lGLU
 
-/#SFML
-#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/  -lsfml-graphics -lsfml-window -lsfml-system
-#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/SFML-2.4.2/lib/ -lsfml-graphics-d -lsfml-window-d -lsfml-system-d
-#else:unix: LIBS += -lsfml-graphics -lsfml-window -lsfml-system
-#INCLUDEPATH += $$PWD/../lib/SFML-2.4.2/include
-#DEPENDPATH += $$PWD/../lib/SFML-2.4.2/include
-
-#SDL
-unix: LIBS += -lSDL2 -lSDL2main -lSDL2_image
+#SDL2 + SDL2_image
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../lib/SDL2-2.0.5/lib/ -lmingw32 -lSDL2main -lSDL  -lSDL2_image
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../lib/SDL2-2.0.5/lib/ -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
+else:unix: LIBS += -lSDL2 -lSDL2main -lSDL2_image
+INCLUDEPATH += $$PWD/../lib/SDL2-2.0.5/include
+DEPENDPATH += $$PWD/../lib/SDL2-2.0.5/include
 
 #GLEW
 win32: LIBS += -L$$PWD/../lib/glew-2.1.0/lib/ -lglew32 -lglew32.dll

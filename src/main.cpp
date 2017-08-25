@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-int main()
+int main(int argc, char **argv)
 {
 
     RendererSDL *r = new RendererSDL(800,600,"Renderer");
@@ -33,8 +33,8 @@ int main()
     std::cout << r->getOpenGlInfo() << std::endl;
 
     //Tests::TestShapes(r);
-    Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
-    //Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
+    //Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
+    Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestTexturePlacement(r,"textures/dirt-side.jpg");
 
     std::cout << "Closing Main loop" << std::endl;

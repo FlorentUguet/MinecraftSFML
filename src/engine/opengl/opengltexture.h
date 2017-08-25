@@ -9,16 +9,18 @@
 class OpenGLTexture
 {
 public:
-    OpenGLTexture(std::string file = "");
-    void load(std::string file);
+    OpenGLTexture(std::string file = "", GLenum pixelType = GL_RGB);
+    void load(std::string file, GLenum pixelType = GL_RGB);
 
     GLuint getId();
 
-    static GLuint LoadTexture(std::string file);
-    static GLuint LoadTexture(int w, int h, unsigned char *pixels);
+    static GLuint LoadTexture(std::string file, GLenum pixelType = GL_RGB);
+    static GLuint LoadTexture(int w, int h, unsigned char *pixels, GLenum pixelType = GL_RGB);
 
 private:
     GLuint id = 0;
+    std::string file;
+    GLenum type;
 };
 
 #endif // OPENGLTEXTURE_H

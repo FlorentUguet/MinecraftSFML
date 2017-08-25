@@ -77,9 +77,9 @@ void Tests::TestBlocks(Renderer *r, std::string texSide, std::string texBottom, 
     OpenGLEntity *e = new OpenGLEntity();
     e->show();
 
-    OpenGLTexture *textureTop = new OpenGLTexture(texTop);
-    OpenGLTexture *textureBottom = new OpenGLTexture(texBottom);
-    OpenGLTexture *textureSide = new OpenGLTexture(texSide);
+    OpenGLTexture *textureTop = new OpenGLTexture(texTop, GL_RGB);
+    OpenGLTexture *textureBottom = new OpenGLTexture(texBottom, GL_RGB);
+    OpenGLTexture *textureSide = new OpenGLTexture(texSide, GL_RGB);
 
     Box3D *b1 = new Box3D(e);
     b1->init();
