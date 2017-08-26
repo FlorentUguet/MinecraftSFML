@@ -7,7 +7,9 @@ BlockEntity::BlockEntity(int x, int y, int z, ChunkEntity *parent)
     this->z = z;
     this->y = y;
 
-    for(int i=0;i<(int)BlockSides::COUNT;i++)
+    this->sides = std::vector<BlockSideEntity*>(Sides::COUNT);
+
+    for(int i=0;i<Sides::COUNT;i++)
     {
         this->sides[i] = new BlockSideEntity(i,this);
     }
@@ -21,6 +23,47 @@ bool BlockEntity::isVisible()
 void BlockEntity::setVisible(bool visible)
 {
     this->visible = visible;
+}
+
+int BlockEntity::getX()
+{
+    return this->x;
+}
+
+int BlockEntity::getY()
+{
+    return this->y;
+}
+
+int BlockEntity::getZ()
+{
+    return this->z;
+}
+
+int BlockEntity::getAbsX()
+{
+    if(this->parent)
+        return (this->parent->getX() * CHUNK_SIDE_BLOCKS) + this->getX();
+    else
+        this->getX();
+}
+
+int BlockEntity::getAbsY()
+{
+    return this->getY();
+}
+
+int BlockEntity::getAbsZ()
+{
+    if(this->parent)
+        return (this->parent->getZ() * CHUNK_SIDE_BLOCKS) + this->getZ();
+    else
+        this->getZ();
+}
+
+std::vector<BlockSideEntity*> BlockEntity::getSides()
+{
+    return this->sides;
 }
 
 void BlockEntity::updateBlockVisibility()
@@ -57,20 +100,20 @@ void BlockEntity::updateBlockVisibility()
 
 void BlockEntity::updateVisibility()
 {
-    for(int i=0;i<BlockSides::COUNT;i++)
+    for(int i=0;i<Sides::COUNT;i++)
     {
-        this->sides[i]->setVisible(this->parent ==0);
+        this->sides[i]->setVisible(this->parent == 0);
     }
 
     if(this->parent !=0)
     {
         //Above
         if(this->parent->getBlockAt(this->x,this->y +1, this->z) == 0)
-            this->sides[BlockSides::TOP]->show();
+            this->sides[Sides::TOP]->show();
 
         //Under
         if(this->parent->getBlockAt(this->x,this->y - 1, this->z) == 0)
-            this->sides[BlockSides::BOTTOM]->show();
+            this->sides[Sides::BOTTOM]->show();
 
         //Back
         if(this->z == CHUNK_SIDE_BLOCKS-1)
@@ -81,18 +124,18 @@ void BlockEntity::updateVisibility()
                 {
                     ChunkEntity *c = this->parent->getMap()->getChunkAt(this->parent->getX(),this->parent->getZ()+1);
                     if(c->getBlockAt(this->x,this->y,0) == 0)
-                        this->sides[BlockSides::BACK]->show();
+                        this->sides[Sides::BACK]->show();
                 }
             }
             else
             {
-                this->sides[BlockSides::BACK]->show();
+                this->sides[Sides::BACK]->show();
             }
         }
         else
         {
             if(parent->getBlockAt(this->x, this->y, this->z+1) == 0)
-                this->sides[BlockSides::BACK]->show();
+                this->sides[Sides::BACK]->show();
         }
 
         //Front
@@ -104,18 +147,18 @@ void BlockEntity::updateVisibility()
                 {
                     ChunkEntity *c = this->parent->getMap()->getChunkAt(this->parent->getX(),this->parent->getZ()-1);
                     if(c->getBlockAt(this->x,this->y,CHUNK_SIDE_BLOCKS-1) == 0)
-                        this->sides[BlockSides::FRONT]->show();
+                        this->sides[Sides::FRONT]->show();
                 }
             }
             else
             {
-                this->sides[BlockSides::FRONT]->show();
+                this->sides[Sides::FRONT]->show();
             }
         }
         else
         {
             if(parent->getBlockAt(this->x, this->y, this->z+1) == 0)
-                this->sides[BlockSides::FRONT]->show();
+                this->sides[Sides::FRONT]->show();
         }
 
         //Left
@@ -125,14 +168,14 @@ void BlockEntity::updateVisibility()
                     //If the block is on the X origin
                     ChunkEntity *c = this->parent->getMap()->getChunkAt(this->parent->getX()-1,this->parent->getZ());
                     if(c->getBlockAt(CHUNK_SIDE_BLOCKS-1,this->y,this->z) == 0)
-                        this->sides[BlockSides::LEFT]->show();
+                        this->sides[Sides::LEFT]->show();
                 }
             }else{
-                this->sides[BlockSides::LEFT]->show();
+                this->sides[Sides::LEFT]->show();
             }
         }else{
             if(parent->getBlockAt(this->x-1,this->y,this->z) == 0)
-                this->sides[BlockSides::LEFT]->show();
+                this->sides[Sides::LEFT]->show();
         }
 
         //Right
@@ -142,18 +185,18 @@ void BlockEntity::updateVisibility()
                     //If the block is on the X origin
                     ChunkEntity *c = this->parent->getMap()->getChunkAt(this->parent->getX()+1,this->parent->getZ());
                     if(c->getBlockAt(0,this->y,this->z) == 0)
-                        this->sides[BlockSides::RIGHT]->show();
+                        this->sides[Sides::RIGHT]->show();
                 }
             }else{
-                this->sides[BlockSides::RIGHT]->show();
+                this->sides[Sides::RIGHT]->show();
             }
         }else{
             if(parent->getBlockAt(this->x+1,this->y,this->z) == 0)
-                this->sides[BlockSides::RIGHT]->show();
+                this->sides[Sides::RIGHT]->show();
         }
     }
 
-    for(int i=0;i<BlockSides::COUNT;i++)
+    for(int i=0;i<Sides::COUNT;i++)
     {
         if(this->sides[i]->isVisible())
         {

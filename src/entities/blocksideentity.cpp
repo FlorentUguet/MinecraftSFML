@@ -34,17 +34,17 @@ void BlockSideEntity::update()
 
     switch(this->side)
     {
-    case BlockSides::TOP:
+    case BlockEntity::Sides::TOP:
         break;
-    case BlockSides::BOTTOM:
+    case BlockEntity::Sides::BOTTOM:
         break;
-    case BlockSides::FRONT:
+    case BlockEntity::Sides::FRONT:
         break;
-    case BlockSides::BACK:
+    case BlockEntity::Sides::BACK:
         break;
-    case BlockSides::LEFT:
+    case BlockEntity::Sides::LEFT:
         break;
-    case BlockSides::RIGHT:
+    case BlockEntity::Sides::RIGHT:
         break;
     }
 }

@@ -20,7 +20,6 @@ int main(int argc, char **argv)
         return -1;
     }
 
-
     #ifdef WIN32
     int res = glewInit();
 
@@ -34,8 +33,9 @@ int main(int argc, char **argv)
 
     //Tests::TestShapes(r);
     //Tests::TestTexture(r, "textures/dirt.jpg", "textures/stone.jpg");
-    Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
+    //Tests::TestBlocks(r,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestTexturePlacement(r,"textures/dirt-side.jpg");
+    Tests::TestChunk(r,0,0,128,"textures/dirt-side.jpg","textures/dirt.jpg","textures/grass.jpg");
 
     std::cout << "Closing Main loop" << std::endl;
     return 0;

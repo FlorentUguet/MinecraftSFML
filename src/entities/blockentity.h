@@ -9,16 +9,6 @@ class BlockSideEntity;
 #include "chunkentity.h"
 #include "blocksideentity.h"
 
-enum BlockSides{
-    TOP = 0,
-    BOTTOM,
-    LEFT,
-    RIGHT,
-    FRONT,
-    BACK,
-    COUNT
-};
-
 
 class BlockEntity
 {
@@ -30,6 +20,26 @@ public:
     void updateBlockVisibility();
     void updateVisibility();
 
+    int getX();
+    int getY();
+    int getZ();
+
+    int getAbsX();
+    int getAbsY();
+    int getAbsZ();
+
+    std::vector<BlockSideEntity*> getSides();
+
+    enum Sides{
+        TOP = 0,
+        BOTTOM,
+        LEFT,
+        RIGHT,
+        FRONT,
+        BACK,
+        COUNT
+    };
+
 private:
     bool visible;
 
@@ -38,7 +48,7 @@ private:
     int y;
     int z;
 
-    BlockSideEntity *sides[BlockSides::COUNT];
+    std::vector<BlockSideEntity*>sides;
 };
 
 #endif // QBLOCKENTITY_H

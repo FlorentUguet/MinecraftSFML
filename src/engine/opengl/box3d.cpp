@@ -52,6 +52,11 @@ void Box3D::init()
     loadBuffer();
 }
 
+bool Box3D::setSideVisible(int side, bool visible)
+{
+    this->sides[side]->setVisible(visible);
+}
+
 void Box3D::setTextureSide(int side, OpenGLTexture* tex)
 {
     this->sides[side]->setTexture(tex);

@@ -26,6 +26,8 @@ public:
     BlockEntity* getBlockAt(int x, int y, int z);
     int getHeight(int x, int z);
 
+    std::vector<BlockEntity*> getBlocks();
+
     void updateVisibility();
 
     bool hasMap();

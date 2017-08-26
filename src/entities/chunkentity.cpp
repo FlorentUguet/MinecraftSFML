@@ -51,6 +51,11 @@ int ChunkEntity::getHeight(int x, int z)
     return this->heightmap[x][z] * MAP_HEIGHT_BLOCKS;
 }
 
+std::vector<BlockEntity*> ChunkEntity::getBlocks()
+{
+    return this->blockList;
+}
+
 void ChunkEntity::generateHeightmap(unsigned int seed)
 {
     Perlin pn(seed);

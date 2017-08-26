@@ -8,6 +8,11 @@ OpenGLEntity::OpenGLEntity(OpenGLEntity *parent)
 
 OpenGLEntity::~OpenGLEntity()
 {
+    for(int i=this->children.size()-1;i>=0;i--)
+    {
+        delete this->children[i];
+    }
+
     glDeleteBuffers(1, &this->vbo);
     glDeleteBuffers(1, &this->vboTexture);
     glDeleteVertexArrays(1,&this->vao);

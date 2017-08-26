@@ -9,6 +9,8 @@
 #include "engine/opengl/plane2d.h"
 #include "engine/opengl/box3d.h"
 
+#include "entities/chunkentity.h"
+
 #include <glm/glm.hpp>
 #include <chrono>
 
@@ -22,9 +24,8 @@ public:
     static void TestShapes(Renderer *r);
     static void TestTexturePlacement(Renderer *r, std::string file);
     static void TestTexture(Renderer *r, std::string file0, std::string file1);
-    static void TestEntity(Renderer *r, OpenGLEntity *e);
-
-    static void TestTextureFileSDL(std::string path);
+    static void TestEntity(Renderer *r, OpenGLEntity *e, bool oneShot = true, bool measure = false);
+    static void TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string texSide, std::string texBottom, std::string texTop);
 };
 
 #endif // TESTS_H
