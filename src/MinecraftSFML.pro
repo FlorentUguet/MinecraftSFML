@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     engine/opengl/glutils.cpp \
     engine/opengl/opengltexture.cpp \
     engine/opengl/scene.cpp \
-    engine/controller/renderersdl.cpp
+    engine/controller/renderersdl.cpp \
+    engine/opengl/camera.cpp
 
 HEADERS += \
     znoise/Enums.hpp \
@@ -51,7 +52,8 @@ HEADERS += \
     engine/opengl/opengltexture.h \
     engine/opengl/scene.h \
     engine/controller/renderersdl.h \
-    opengl.h
+    opengl.h \
+    engine/opengl/camera.h
 
 #Threading Linux
 unix: LIBS += -lpthread

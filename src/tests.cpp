@@ -135,7 +135,7 @@ void Tests::TestShapes(Renderer *r)
 }
 
 
-void Tests::TestEntity(Renderer *r, OpenGLEntity *e, bool oneShot, bool measure)
+void Tests::TestEntity(Renderer *r, OpenGLEntity *e, int loops, bool measure)
 {
     std::cout << "Loading shaders" << std::endl;
 
@@ -150,19 +150,21 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e, bool oneShot, bool measure)
         r->setProgram(programID);
     }
 
-    std::cout << "Initializing models" << std::endl;
-    Scene *s = new Scene(60.0f,float(r->getWidth()) / float(r->getHeight()));
-    s->setVertexShader(r->getProgramID());
+    Camera *c = new Camera();
+    c->setParent(e);
+    c->translate(-1.0f,0.0f,0.0f);
+    Scene *s = new Scene(c,e);
 
+    s->setVertexShader(r->getProgramID());
     r->setScene(s);
-    s->setRoot(e);
 
     std::cout << "Running" << std::endl;
     r->start(60);
 
     GLUtils::OutputErrors("Initialization");
 
-
+    int time = 0;
+    int loop = 0;
 
     do
     {
@@ -170,12 +172,14 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e, bool oneShot, bool measure)
         r->processInputs();
         r->update();
         auto done = std::chrono::high_resolution_clock::now();
-        int t = std::chrono::duration_cast<std::chrono::milliseconds>( done - started ).count();
-        if(measure) std::cout << "Frame rendered in " << t << "ms (" << 1000.0 / double(t) << " fps)"<< std::endl;
-
+        time += std::chrono::duration_cast<std::chrono::milliseconds>( done - started ).count();
         GLUtils::OutputErrors("Loop");
-    }while(r->isRunning() && !oneShot);
+        loop++;
+    }while(r->isRunning() && (loops <= 0 || loop > loops));
 
+    time /= loop;
+
+    if(measure) std::cout << "Frame rendered in " << time << "ms (" << 1000.0 / double(time) << " fps)"<< std::endl;
 
     std::cout << "Exiting" << std::endl;
 }
@@ -200,10 +204,11 @@ void Tests::TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string 
 
     std::vector<BlockEntity*> blocks = c->getBlocks();
 
+    int loops = 10;
+
     OpenGLTexture *textureTop = new OpenGLTexture(texTop, GL_RGB);
     OpenGLTexture *textureBottom = new OpenGLTexture(texBottom, GL_RGB);
     OpenGLTexture *textureSide = new OpenGLTexture(texSide, GL_RGB);
-
     //Without side optimization
     std::cout << std::endl << "Without optimization" << std::endl;
     started = std::chrono::high_resolution_clock::now();
@@ -224,7 +229,7 @@ void Tests::TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string 
     }
     done = std::chrono::high_resolution_clock::now();
     std::cout << "Loaded entities in " << std::chrono::duration_cast<std::chrono::milliseconds>( done - started ).count() << "ms" << std::endl;;
-    TestEntity(r,e, true, true);
+    TestEntity(r,e, loops, true);
     delete e;
 
     //With side optimization
@@ -257,7 +262,7 @@ void Tests::TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string 
     }
     done = std::chrono::high_resolution_clock::now();
     std::cout << "Loaded " << visible << " visible entities in " << std::chrono::duration_cast<std::chrono::milliseconds>( done - started ).count() << "ms" << std::endl;;
-    TestEntity(r,e, true, true);
+    TestEntity(r,e, loops, true);
     delete e;
 
     //With side optimization
@@ -298,6 +303,6 @@ void Tests::TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string 
     }
     done = std::chrono::high_resolution_clock::now();
     std::cout << "Loaded " << visible << " visible entities in " << std::chrono::duration_cast<std::chrono::milliseconds>( done - started ).count() << "ms" << std::endl;;
-    TestEntity(r,e, true, true);
+    TestEntity(r,e, loops, true);
 
 }

@@ -8,6 +8,9 @@
 #include "engine/opengl/triangle2d.h"
 #include "engine/opengl/plane2d.h"
 #include "engine/opengl/box3d.h"
+#include "engine/opengl/opengltexture.h"
+
+#include "engine/opengl/camera.h"
 
 #include "entities/chunkentity.h"
 
@@ -24,7 +27,7 @@ public:
     static void TestShapes(Renderer *r);
     static void TestTexturePlacement(Renderer *r, std::string file);
     static void TestTexture(Renderer *r, std::string file0, std::string file1);
-    static void TestEntity(Renderer *r, OpenGLEntity *e, bool oneShot = true, bool measure = false);
+    static void TestEntity(Renderer *r, OpenGLEntity *e, int loops = true, bool measure = false);
     static void TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string texSide, std::string texBottom, std::string texTop);
 };
 

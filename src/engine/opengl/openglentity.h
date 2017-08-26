@@ -10,11 +10,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "opengltexture.h"
 #include "glutils.h"
 
+class OpenGLTexture;
 class Scene;
-#include "scene.h"
 
 #define VERTICE_SIZE 3
 #define TEXTURE_COORD_SIZE 2
@@ -37,6 +36,7 @@ public:
     void scale(float scale = DEFAULT_SCALE);
 
     glm::mat4 getTransformedMatrix();
+    glm::mat4 getMVP(Scene *scene);
 
     void addVertice(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
     void addVertice(GLfloat x, GLfloat y, GLfloat z);

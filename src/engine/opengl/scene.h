@@ -1,22 +1,18 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "opengl.h"
 #include <glm/glm.hpp>
-
 #include <vector>
 
+class Camera;
 class OpenGLEntity;
-#include "openglentity.h"
-
-#define SCENE_RATIO (4.0f/3.0f)
-#define SCENE_FOV 60.0f
-#define SCENE_NEAR 1.0f
-#define SCENE_FAR 100.0f
 
 class Scene
 {
 public:
-    Scene(float fov = SCENE_FOV, float ratio = SCENE_RATIO, float near = SCENE_NEAR, float far = SCENE_FAR);
+    Scene(Camera *c = 0, OpenGLEntity *e = 0);
+    void setCamera(Camera *c);
     void setRoot(OpenGLEntity* e);
 
     void setVertexShader(GLuint shader);
@@ -24,13 +20,12 @@ public:
     GLint getMVPId();
     GLint getModelViewMatrixId();
 
-    void setPerspective(float fov = SCENE_FOV, float ratio = SCENE_RATIO, float near = SCENE_NEAR, float far = SCENE_FAR);
-
     glm::mat4 calculateMVP(OpenGLEntity *e);
     void draw();
 
 private:
-    OpenGLEntity* root;
+    OpenGLEntity* root = 0;
+    Camera *camera = 0;
 
     glm::mat4 projectionMatrix;
     glm::mat4 viewMatrix;

@@ -1,5 +1,8 @@
 #include "openglentity.h"
 
+#include "opengltexture.h"
+#include "scene.h"
+
 OpenGLEntity::OpenGLEntity(OpenGLEntity *parent)
 {
     setParent(parent);
@@ -162,9 +165,14 @@ glm::mat4 OpenGLEntity::getTransformedMatrix()
     return final;
 }
 
+glm::mat4 OpenGLEntity::getMVP(Scene *scene)
+{
+    return scene->calculateMVP(this);
+}
+
 void OpenGLEntity::draw(Scene *scene)
 {
-    glm::mat4 mvp = scene->calculateMVP(this); 
+    glm::mat4 mvp = this->getMVP(scene);
     GLUtils::OutputErrors("draw->glUniformMatrix4fv->before");
     glUniformMatrix4fv(scene->getMVPId(), 1, GL_FALSE, &mvp[0][0]);
     GLUtils::OutputErrors("draw->glUniformMatrix4fv->after");
