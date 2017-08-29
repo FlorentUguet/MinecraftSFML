@@ -32,6 +32,7 @@ public:
     void loadBuffer();
 
     void translate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+    void translate(glm::vec3 pos);
     void rotate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
     void scale(float scale = DEFAULT_SCALE);
 
@@ -41,6 +42,8 @@ public:
     void addVertice(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
     void addVertice(GLfloat x, GLfloat y, GLfloat z);
     void addTexCoord(GLfloat u, GLfloat v);
+
+    void updateDirectionCulling(OpenGLEntity *reference);
 
     void setTexture(OpenGLTexture *texture);
 
@@ -58,6 +61,7 @@ protected:
 
     std::vector<GLfloat> vertices;
     std::vector<GLfloat> textureCoordinates;
+    std::vector<GLuint> verticesIndices;
 
     glm::vec3 translation = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
@@ -66,6 +70,7 @@ protected:
     GLuint vbo = 0;
     GLuint vao = 0;
     GLuint vboTexture = 0;
+    GLuint vboIndices = 0;
 
     OpenGLTexture *texture = 0;
 

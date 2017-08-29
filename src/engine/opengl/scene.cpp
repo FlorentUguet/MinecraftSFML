@@ -35,12 +35,29 @@ void Scene::setVertexShader(GLuint shader)
     this->MVPLocation = glGetUniformLocation(this->programID, "MVP");
 }
 
+void Scene::newFrame()
+{
+    this->vpNeedsUpdate = true;
+}
+
+glm::mat4 Scene::getVP()
+{
+    if(this->vpNeedsUpdate)
+    {
+        this->vpMatrix = this->camera->getProjectionMatrix() * this->camera->getViewMatrix();
+        this->vpNeedsUpdate = false;
+    }
+
+    return this->vpMatrix;
+}
+
 glm::mat4 Scene::calculateMVP(OpenGLEntity *e)
 {
-    return this->camera->getProjectionMatrix() * this->camera->getViewMatrix() * e->getTransformedMatrix();
+    return this->getVP() * e->getTransformedMatrix();
 }
 
 void Scene::draw()
 {
+    this->newFrame();
     this->root->draw(this);
 }

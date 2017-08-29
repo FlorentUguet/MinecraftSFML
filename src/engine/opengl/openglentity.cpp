@@ -18,6 +18,7 @@ OpenGLEntity::~OpenGLEntity()
 
     glDeleteBuffers(1, &this->vbo);
     glDeleteBuffers(1, &this->vboTexture);
+    glDeleteBuffers(1, &this->vboIndices);
     glDeleteVertexArrays(1,&this->vao);
 }
 
@@ -94,18 +95,29 @@ void OpenGLEntity::loadBuffer()
 
         GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO)");
 
+        //Texture
         if(this->textureCoordinates.size() != 0)
         {
-            GLfloat g_vertex_buffer_data[this->textureCoordinates.size()];
-            std::copy(this->textureCoordinates.begin(),this->textureCoordinates.end(),g_vertex_buffer_data);
+            GLfloat data[this->textureCoordinates.size()];
+            std::copy(this->textureCoordinates.begin(),this->textureCoordinates.end(),data);
 
             glGenBuffers(1, &this->vboTexture);
-            // The following commands will talk about our 'vertexbuffer' buffer
             glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
-            // Give our vertices to OpenGL.
-            glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
             GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO Texture)");
+        }
+
+        //Indexes
+        if(this->verticesIndices.size() != 0)
+        {
+            GLuint data[this->verticesIndices.size()];
+            std::copy(this->verticesIndices.begin(),this->verticesIndices.end(),data);
+
+            //vboIndices
+            glGenBuffers(1, &this->vboIndices);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
         }
 
         //VAO
@@ -136,7 +148,12 @@ void OpenGLEntity::loadBuffer()
 
 void OpenGLEntity::translate(float x, float y, float z)
 {
-    this->translation = glm::vec3(x,y,z);
+    this->translate(glm::vec3(x,y,z));
+}
+
+void OpenGLEntity::translate(glm::vec3 pos)
+{
+    this->translation = pos;
 }
 
 void OpenGLEntity::rotate(float x, float y, float z)
@@ -173,9 +190,7 @@ glm::mat4 OpenGLEntity::getMVP(Scene *scene)
 void OpenGLEntity::draw(Scene *scene)
 {
     glm::mat4 mvp = this->getMVP(scene);
-    GLUtils::OutputErrors("draw->glUniformMatrix4fv->before");
     glUniformMatrix4fv(scene->getMVPId(), 1, GL_FALSE, &mvp[0][0]);
-    GLUtils::OutputErrors("draw->glUniformMatrix4fv->after");
 
     if(this->loaded)
     {
@@ -185,7 +200,6 @@ void OpenGLEntity::draw(Scene *scene)
         glBindVertexArray(this->vao);
         glDrawArrays(GL_TRIANGLES, 0, verticesCount);
         glBindVertexArray(0);
-        GLUtils::OutputErrors("draw->glDrawArrays");
     }
 
     for(int i=0;i<this->children.size();i++)
@@ -193,6 +207,11 @@ void OpenGLEntity::draw(Scene *scene)
         if(this->children[i]->isVisible())
             this->children[i]->draw(scene);
     }
+}
+
+void OpenGLEntity::updateDirectionCulling(OpenGLEntity *reference)
+{
+
 }
 
 void OpenGLEntity::hide()

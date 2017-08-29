@@ -1,12 +1,8 @@
 #include "box3d.h"
 
-Box3D::Box3D(int x, int y, int z, OpenGLEntity* parent) : Box3D(parent)
-{
-
-}
-
 Box3D::Box3D(OpenGLEntity *parent) : OpenGLEntity(parent)
 {
+
 }
 
 void Box3D::init()
@@ -22,11 +18,11 @@ void Box3D::init()
         {
         case Sides::TOP:
             plane->translate(0,t,0);
-            plane->rotate(90.0f);
+            plane->rotate(-90.0f);
             break;
         case Sides::BOTTOM:
             plane->translate(0,-t,0);
-            plane->rotate(-90.0f);
+            plane->rotate(90.0f);
             break;
         case Sides::LEFT:
             plane->translate(t,0,0);

@@ -14,6 +14,8 @@
 
 #include "entities/chunkentity.h"
 
+#include "timer.h"
+
 #include <glm/glm.hpp>
 #include <chrono>
 
@@ -27,8 +29,10 @@ public:
     static void TestShapes(Renderer *r);
     static void TestTexturePlacement(Renderer *r, std::string file);
     static void TestTexture(Renderer *r, std::string file0, std::string file1);
-    static void TestEntity(Renderer *r, OpenGLEntity *e, int loops = true, bool measure = false);
+    static void TestEntity(Renderer *r, OpenGLEntity *e, Camera *c = 0, int loops = 0, bool measure = false);
     static void TestChunk(Renderer *r, int x, int y, unsigned int seed, std::string texSide, std::string texBottom, std::string texTop);
+    static void TestCulling(Renderer *r, std::string texSide, std::string texBottom, std::string texTop, glm::vec3 cameraPos);
+    static void TestBlockPlane(Renderer *r, std::string texture, int x, int y, bool culling);
 };
 
 #endif // TESTS_H
