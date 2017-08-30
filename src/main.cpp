@@ -31,10 +31,11 @@ int main(int argc, char **argv)
 
     std::cout << r->getOpenGlInfo() << std::endl;
 
-    Tests::TestBlocks(r,"textures/grass-side.jpg","textures/dirt.jpg","textures/grass.jpg");
+    //Tests::TestBlocks(r,"textures/grass-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestChunk(r,0,0,128,"textures/grass-side.jpg","textures/dirt.jpg","textures/grass.jpg");
     //Tests::TestCulling(r,"textures/grass-side.jpg","textures/dirt.jpg","textures/grass.jpg",glm::vec3(5.0f,5.0f,5.0f));
-    //Tests::TestBlockPlane(r,"textures/dirt.jpg",10,10,false);
+    //Tests::TestJsonEntity(r, "entities/cube.json");
+    Tests::TestInstancing(r,"textures/dirt.jpg",5,5);
 
     std::cout << "Closing Main loop" << std::endl;
     return 0;

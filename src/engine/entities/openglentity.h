@@ -10,8 +10,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "glutils.h"
+#include "../glutils.h"
 
+class OpenGLTextureAtlas;
 class OpenGLTexture;
 class Scene;
 
@@ -30,6 +31,9 @@ public:
     virtual void draw(Scene *scene);
     virtual void init();
     void loadBuffer();
+    void createVAO();
+
+    void setInstances(std::vector<glm::vec3> instances);
 
     void translate(float x = 0.0f, float y = 0.0f, float z = 0.0f);
     void translate(glm::vec3 pos);
@@ -41,16 +45,24 @@ public:
 
     void addVertice(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
     void addVertice(GLfloat x, GLfloat y, GLfloat z);
+    void addIndice(GLuint i);
     void addTexCoord(GLfloat u, GLfloat v);
 
     void updateDirectionCulling(OpenGLEntity *reference);
 
+    void setTextureAtlas(OpenGLTextureAtlas *atlas);
     void setTexture(OpenGLTexture *texture);
 
     void hide();
     void show();
     void setVisible(bool visible);
     bool isVisible();
+
+    GLuint getVAO();
+    GLuint getVBOIndices();
+    OpenGLTexture *getTexture();
+
+    int getVerticesIndexesCount();
 
     void clearBuffers();
 
@@ -61,9 +73,10 @@ protected:
     OpenGLEntity *parent = 0;
     std::vector<OpenGLEntity*> children;
 
-    std::vector<GLfloat> vertices;
-    std::vector<GLfloat> textureCoordinates;
-    std::vector<GLuint> verticesIndices;
+    std::vector<GLfloat> verticesXYZ;
+    std::vector<GLfloat> verticesUV;
+    std::vector<GLuint> verticesI;
+    std::vector<glm::vec3> instances;
 
     glm::vec3 translation = glm::vec3(0.0f);
     glm::vec3 rotation = glm::vec3(0.0f);
@@ -73,8 +86,10 @@ protected:
     GLuint vao = 0;
     GLuint vboTexture = 0;
     GLuint vboIndices = 0;
+    GLuint vboInstances = 0;
 
     OpenGLTexture *texture = 0;
+    OpenGLTextureAtlas *atlas = 0;
 
     int verticesCount = 0;
 

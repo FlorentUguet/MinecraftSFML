@@ -9,18 +9,23 @@
 class OpenGLTexture
 {
 public:
-    OpenGLTexture(std::string file = "", int xN = 1, int yN = 1, GLenum pixelType = GL_RGB);
+    OpenGLTexture(std::string file = "", GLenum pixelType = GL_RGB);
     void load(std::string file, GLenum pixelType = GL_RGB);
 
     GLuint getId();
 
-    static GLuint LoadTexture(std::string file, GLenum pixelType = GL_RGB);
     static GLuint LoadTexture(int w, int h, unsigned char *pixels, GLenum pixelType = GL_RGB);
+
+    int getWidth();
+    int getHeight();
+    SDL_Surface *getSurface();
 
 private:
     GLuint id = 0;
     std::string file;
     GLenum type;
+
+    SDL_Surface *surface = 0;
 
     int xN;
     int yN;

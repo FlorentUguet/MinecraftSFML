@@ -5,40 +5,6 @@ Tests::Tests()
 
 }
 
-void Tests::MatriceOperationsTiming(int number)
-{
-    auto started = std::chrono::high_resolution_clock::now();
-
-    for(int i=0;i<number;i++)
-        glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.f)); // On crée la matrice de vue avec une translation en arrière de cinq unités
-
-    auto done = std::chrono::high_resolution_clock::now();
-
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(done-started).count() << "us for " << number << " operations" << std::endl;
-}
-
-void Tests::TestTexturePlacement(Renderer *r, std::string file)
-{
-    OpenGLEntity *e = new OpenGLEntity();
-    e->show();
-
-    OpenGLTexture *texture = new OpenGLTexture(file);
-
-    Plane2D *p = new Plane2D(e);
-    p->init();
-    p->setTexture(texture);
-
-    //Shaders
-    GLuint fragmentID = GLUtils::LoadShader("shaders/TextureFSH.fsh", GL_FRAGMENT_SHADER);
-    GLuint vertexID = GLUtils::LoadShader("shaders/MVPVSH.vsh", GL_VERTEX_SHADER);
-
-    //Program
-    GLuint programID = GLUtils::LoadShaders(vertexID,fragmentID);
-    r->setProgram(programID);
-
-    TestEntity(r,e);
-}
-
 void Tests::TestTexture(Renderer *r, std::string file0, std::string file1)
 {
     OpenGLEntity *e = new OpenGLEntity();
@@ -84,12 +50,14 @@ void Tests::TestBlocks(Renderer *r, std::string texSide, std::string texBottom, 
     Box3D *b1 = new Box3D(e);
     b1->init();
 
+    /*
     b1->setTextureSide(Box3D::Sides::TOP, textureTop);
     b1->setTextureSide(Box3D::Sides::BOTTOM, textureBottom);
     b1->setTextureSide(Box3D::Sides::LEFT, textureSide);
     b1->setTextureSide(Box3D::Sides::RIGHT, textureSide);
     b1->setTextureSide(Box3D::Sides::FRONT, textureSide);
     b1->setTextureSide(Box3D::Sides::BACK, textureSide);
+    */
 
     b1->translate(0.0f,0.0f,-2.0f);
     b1->scale(0.5f);
@@ -97,17 +65,19 @@ void Tests::TestBlocks(Renderer *r, std::string texSide, std::string texBottom, 
     Box3D *b2 = new Box3D(e);
     b2->init();
 
+    /*
     b2->setTextureSide(Box3D::Sides::TOP, textureTop);
     b2->setTextureSide(Box3D::Sides::BOTTOM, textureBottom);
     b2->setTextureSide(Box3D::Sides::LEFT, textureSide);
     b2->setTextureSide(Box3D::Sides::RIGHT, textureSide);
     b2->setTextureSide(Box3D::Sides::FRONT, textureSide);
     b2->setTextureSide(Box3D::Sides::BACK, textureSide);
+    */
 
     b2->scale(0.5f);
 
     //Shaders
-    GLuint fragmentID = GLUtils::LoadShader("shaders/TextureFSH.fsh", GL_FRAGMENT_SHADER);
+    GLuint fragmentID = GLUtils::LoadShader("shaders/SimpleFragmentShader.fsh", GL_FRAGMENT_SHADER);
     GLuint vertexID = GLUtils::LoadShader("shaders/MVPVSH.vsh", GL_VERTEX_SHADER);
 
     //Program
@@ -154,7 +124,7 @@ void Tests::TestEntity(Renderer *r, OpenGLEntity *e, Camera *c, int loops, bool 
     {
         c = new Camera();
         c->setParent(e);
-        c->translate(4.0f,4.0f,4.0f);
+        c->translate(4.0f,4.0f,-4.0f);
     }
 
     Scene *s = new Scene(c,e);
@@ -442,40 +412,66 @@ void Tests::TestCulling(Renderer *r, std::string texSide, std::string texBottom,
     TestEntity(r,e,c,loops,true);
 }
 
-void Tests::TestBlockPlane(Renderer *r, std::string texture, int x, int y, bool culling)
+void Tests::TestAtlas(std::string file, int x, int y, std::vector<GLfloat> UVs, std::vector<GLuint> IDs)
 {
-    OpenGLTexture *tex = new OpenGLTexture(texture, GL_RGB);
-    OpenGLEntity *e = new OpenGLEntity();
+    OpenGLTextureAtlas *atlas = new OpenGLTextureAtlas(file,x,y);
+
+    std::vector<GLfloat> newUVs = atlas->convertUVs(UVs,IDs);
+
+    for(int i=0;i<IDs.size();i++)
+    {
+        std::cout << UVs[i*2] << "," << UVs[i*2+1] << "(" << IDs[i] << ") -> " << newUVs[i*2] << "," << newUVs[i*2+1] << std::endl;
+    }
+}
+
+void Tests::TestJsonEntity(Renderer *r, std::string file)
+{
+    OpenGLEntity *root = new OpenGLEntity();
+
+    JsonEntity *j = new JsonEntity(file,root);
+    j->init();
+
+    Camera *c = new Camera();
+    c->setParent(root);
+    c->translate(glm::vec3(-5.0f,5.0f,-5.0f));
+
+    TestEntity(r,root,c,0,false);
+}
+
+void Tests::TestInstancing(Renderer *r, std::string texture, int x, int z)
+{
+    std::vector<glm::vec3> offsets;
 
     for(int i=0;i<x;i++)
     {
-        for(int j=0;j<y;j++)
+        for(int j=0;j<z;j++)
         {
-            Box3D *b = new Box3D(e);
-            b->init();
-            for(int k=0;k<Box3D::Sides::COUNT;k++)
-                b->setTextureSide(k,tex);
-            b->translate(-i,0.0f,-j);
-            b->scale(0.5f);
+            offsets.push_back(glm::vec3(-i,0,-z));
         }
     }
 
     //Shaders
-    GLuint fragmentID = GLUtils::LoadShader("shaders/TextureFSH.fsh", GL_FRAGMENT_SHADER);
-    GLuint vertexID = GLUtils::LoadShader("shaders/MVPVSH.vsh", GL_VERTEX_SHADER);
+    GLuint fragmentID = GLUtils::LoadShader("shaders/SimpleFragmentShader.fsh", GL_FRAGMENT_SHADER);
+    GLuint vertexID = GLUtils::LoadShader("shaders/MvpInstancing.vsh", GL_VERTEX_SHADER);
 
     //Program
     GLuint programID = GLUtils::LoadShaders(vertexID,fragmentID);
     r->setProgram(programID);
 
-    if(culling)
-        glEnable(GL_CULL_FACE);
+    OpenGLEntity *root = new OpenGLEntity();
 
     Camera *c = new Camera();
-    c->setParent(e);
-    c->translate(glm::vec3(5.0f,5.0f,5.0f));
+    c->setParent(root);
+    c->translate(glm::vec3(-5.0f,5.0f,-5.0f));
 
-    TestEntity(r,e,c,200,true);
+    OpenGLTexture *tex = new OpenGLTexture(texture);
+    Box3D *b = new Box3D(root);
+    b->setTexture(tex);
+    b->scale(0.5f);
+    b->setInstances(offsets);
+    b->init();
+
+    TestEntity(r,root,c,0,false);
 }
 
 

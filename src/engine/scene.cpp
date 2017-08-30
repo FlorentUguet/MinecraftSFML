@@ -1,7 +1,7 @@
 #include "scene.h"
 
-#include "camera.h"
-#include "openglentity.h"
+#include "entities/camera.h"
+#include "entities/openglentity.h"
 
 Scene::Scene(Camera *c, OpenGLEntity *e)
 {

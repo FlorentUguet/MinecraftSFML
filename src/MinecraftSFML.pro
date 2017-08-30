@@ -12,22 +12,27 @@ SOURCES += main.cpp \
     znoise/Perlin.cpp \
     znoise/Simplex.cpp \
     znoise/Worley.cpp \
-    engine/opengl/box3d.cpp \
-    engine/opengl/openglentity.cpp \
-    engine/opengl/triangle2d.cpp \
+    engine/entities/box3d.cpp \
+    engine/entities/openglentity.cpp \
+    engine/entities/triangle2d.cpp \
     entities/blockentity.cpp \
     entities/blocksideentity.cpp \
     entities/chunkentity.cpp \
     entities/mapentity.cpp \
     engine/controller/renderer.cpp \
-    engine/opengl/plane2d.cpp \
+    engine/entities/plane2d.cpp \
     tests.cpp \
-    engine/opengl/glutils.cpp \
-    engine/opengl/opengltexture.cpp \
-    engine/opengl/scene.cpp \
+    engine/glutils.cpp \
+    engine/textures/opengltexture.cpp \
+    engine/scene.cpp \
     engine/controller/renderersdl.cpp \
-    engine/opengl/camera.cpp \
-    timer.cpp
+    engine/entities/camera.cpp \
+    timer.cpp \
+    engine/entities/jsonentity.cpp \
+    jsoncpp/jsoncpp.cpp \
+    jsoncpp/jsonutils.cpp \
+    engine/textures/opengltextureatlas.cpp \
+    engine/entities/instancinghandlerentity.cpp
 
 HEADERS += \
     znoise/Enums.hpp \
@@ -39,23 +44,29 @@ HEADERS += \
     znoise/Perlin.hpp \
     znoise/Simplex.hpp \
     znoise/Worley.hpp \
-    engine/opengl/box3d.h \
-    engine/opengl/openglentity.h \
-    engine/opengl/triangle2d.h \
+    engine/entities/box3d.h \
+    engine/entities/openglentity.h \
+    engine/entities/triangle2d.h \
     entities/blockentity.h \
     entities/blocksideentity.h \
     entities/chunkentity.h \
     entities/mapentity.h \
     engine/controller/renderer.h \
-    engine/opengl/plane2d.h \
+    engine/entities/plane2d.h \
     tests.h \
-    engine/opengl/glutils.h \
-    engine/opengl/opengltexture.h \
-    engine/opengl/scene.h \
+    engine/glutils.h \
+    engine/textures/opengltexture.h \
+    engine/scene.h \
     engine/controller/renderersdl.h \
     opengl.h \
-    engine/opengl/camera.h \
-    timer.h
+    engine/entities/camera.h \
+    timer.h \
+    engine/entities/jsonentity.h \
+    jsoncpp/json/json.h \
+    jsoncpp/json/json-forwards.h \
+    jsoncpp/jsonutils.h \
+    engine/textures/opengltextureatlas.h \
+    engine/entities/instancinghandlerentity.h
 
 #Threading Linux
 unix: LIBS += -lpthread
@@ -86,4 +97,5 @@ DISTFILES += \
     shaders/SimpleVertexShader.vsh \
     shaders/TextureFSH.fsh \
     shaders/MVPVSH.vsh \
-    shaders/Light.fsh
+    shaders/Light.fsh \
+    ../qt-builds/build-MinecraftSFML-Desktop_Qt_5_9_0_MinGW_32bit-Debug/shaders/MvpInstancing.vsh

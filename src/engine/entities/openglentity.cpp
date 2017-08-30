@@ -1,7 +1,8 @@
 #include "openglentity.h"
 
-#include "opengltexture.h"
-#include "scene.h"
+#include "../textures/opengltexture.h"
+#include "../textures/opengltextureatlas.h"
+#include "../scene.h"
 
 OpenGLEntity::OpenGLEntity(OpenGLEntity *parent)
 {
@@ -64,17 +65,22 @@ void OpenGLEntity::addVertice(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloa
 
 void OpenGLEntity::addVertice(GLfloat x, GLfloat y, GLfloat z)
 {
-    this->vertices.push_back(x);
-    this->vertices.push_back(y);
-    this->vertices.push_back(z);
+    this->verticesXYZ.push_back(x);
+    this->verticesXYZ.push_back(y);
+    this->verticesXYZ.push_back(z);
 
     this->verticesCount++;
 }
 
 void OpenGLEntity::addTexCoord(GLfloat u, GLfloat v)
 {
-    this->textureCoordinates.push_back(u);
-    this->textureCoordinates.push_back(v);
+    this->verticesUV.push_back(u);
+    this->verticesUV.push_back(v);
+}
+
+void OpenGLEntity::addIndice(GLuint i)
+{
+    this->verticesI.push_back(i);
 }
 
 void OpenGLEntity::setTexture(OpenGLTexture *texture)
@@ -82,15 +88,26 @@ void OpenGLEntity::setTexture(OpenGLTexture *texture)
     this->texture = texture;
 }
 
+void OpenGLEntity::setTextureAtlas(OpenGLTextureAtlas *atlas)
+{
+    this->clearBuffers();
+    this->atlas = atlas;
+    this->setTexture(atlas->getTexture());
+
+    //this->textureCoordinates = this->atlas->convertUVs(this->textureCoordinates,)
+
+    this->loadBuffer();
+}
+
 void OpenGLEntity::loadBuffer()
 {
     this->clearBuffers();
 
-    if(this->vertices.size() != 0)
+    if(this->verticesXYZ.size() != 0)
     {
         //VBO
-        GLfloat g_vertex_buffer_data[this->vertices.size()];
-        std::copy(this->vertices.begin(),this->vertices.end(),g_vertex_buffer_data);
+        GLfloat g_vertex_buffer_data[this->verticesXYZ.size()];
+        std::copy(this->verticesXYZ.begin(),this->verticesXYZ.end(),g_vertex_buffer_data);
 
         glGenBuffers(1, &this->vbo);
         // The following commands will talk about our 'vertexbuffer' buffer
@@ -103,54 +120,85 @@ void OpenGLEntity::loadBuffer()
         GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO)");
 
         //Texture
-        if(this->textureCoordinates.size() != 0)
+        if(this->verticesUV.size() != 0)
         {
-            GLfloat data[this->textureCoordinates.size()];
-            std::copy(this->textureCoordinates.begin(),this->textureCoordinates.end(),data);
+            GLfloat data[this->verticesUV.size()];
+            std::copy(this->verticesUV.begin(),this->verticesUV.end(),data);
 
             glGenBuffers(1, &this->vboTexture);
             glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
             glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
             GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO Texture)");
         }
 
         //Indexes
-        if(this->verticesIndices.size() != 0)
+        if(this->verticesI.size() != 0)
         {
-            GLuint data[this->verticesIndices.size()];
-            std::copy(this->verticesIndices.begin(),this->verticesIndices.end(),data);
+            GLuint data[this->verticesI.size()];
+            std::copy(this->verticesI.begin(),this->verticesI.end(),data);
 
             //vboIndices
             glGenBuffers(1, &this->vboIndices);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+            GLUtils::OutputErrors("OpenGLEntity->loadBuffer(Indices)");
         }
 
-        //VAO
-        glGenVertexArrays(1, &this->vao);
-        glBindVertexArray(this->vao);
-
-        //VBO
-            glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-                //Vertices
-                glVertexAttribPointer(0, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
-                glEnableVertexAttribArray(0);
-
-            glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
-                //Texture
-                if(this->vboTexture != 0)
-                {
-                    glVertexAttribPointer(1, TEXTURE_COORD_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
-                    glEnableVertexAttribArray(1);
-                }
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glBindVertexArray(0);
+        createVAO();
 
         GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VAO)");
     }
+}
+
+void OpenGLEntity::createVAO()
+{
+    if(this->vao == 0)
+        glDeleteBuffers(1,&this->vao);
+
+    //VAO
+    glGenVertexArrays(1, &this->vao);
+    glBindVertexArray(this->vao);
+
+    //VBO
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+            //Vertices
+            glVertexAttribPointer(0, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
+            //Texture
+            glVertexAttribPointer(1, TEXTURE_COORD_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
+            glEnableVertexAttribArray(1);
+
+        if(this->vboInstances > 0)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, this->vboInstances);
+                //Instances
+                glVertexAttribPointer(2, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+                glEnableVertexAttribArray(2);
+                glVertexAttribDivisor(2, 1);
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+}
+
+void OpenGLEntity::setInstances(std::vector<glm::vec3> instances)
+{
+    if(this->vboInstances != 0)
+        glDeleteBuffers(1, &this->vboInstances);
+
+    this->instances = instances;
+
+    glm::vec3 data[this->instances.size()];
+
+    std::copy(this->instances.begin(), this->instances.end(), data);
+
+    glGenBuffers(1, &this->vboInstances);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vboInstances);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * this->instances.size(), &data[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void OpenGLEntity::translate(float x, float y, float z)
@@ -206,10 +254,15 @@ void OpenGLEntity::draw(Scene *scene)
 
         glBindVertexArray(this->vao);
 
-        if(this->vboIndices != 0)
+        if(this->vboInstances != 0)
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
-            glDrawElements(GL_TRIANGLES, this->verticesIndices.size(), GL_UNSIGNED_INT, 0);
+            glDrawElementsInstanced(GL_TRIANGLES, this->verticesI.size(), GL_UNSIGNED_INT, 0, this->instances.size());
+        }
+        else if(this->vboIndices != 0)
+        {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
+            glDrawElements(GL_TRIANGLES, this->verticesI.size(), GL_UNSIGNED_INT, 0);
         }
         else
         {
@@ -249,4 +302,24 @@ void OpenGLEntity::setVisible(bool visible)
 bool OpenGLEntity::isVisible()
 {
     return this->visible;
+}
+
+GLuint OpenGLEntity::getVAO()
+{
+    return this->vao;
+}
+
+GLuint OpenGLEntity::getVBOIndices()
+{
+    return this->vboIndices;
+}
+
+OpenGLTexture* OpenGLEntity::getTexture()
+{
+    return this->texture;
+}
+
+int OpenGLEntity::getVerticesIndexesCount()
+{
+    return this->verticesI.size();
 }

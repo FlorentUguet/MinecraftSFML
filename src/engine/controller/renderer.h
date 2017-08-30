@@ -8,9 +8,9 @@
 #include <sstream>
 #include <chrono>
 
-#include "../opengl/openglentity.h"
-#include "../opengl/scene.h"
-#include "../opengl/glutils.h"
+#include "../entities/openglentity.h"
+#include "../scene.h"
+#include "../glutils.h"
 
 class Renderer
 {
