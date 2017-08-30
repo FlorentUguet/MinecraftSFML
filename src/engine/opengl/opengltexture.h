@@ -9,7 +9,7 @@
 class OpenGLTexture
 {
 public:
-    OpenGLTexture(std::string file = "", GLenum pixelType = GL_RGB);
+    OpenGLTexture(std::string file = "", int xN = 1, int yN = 1, GLenum pixelType = GL_RGB);
     void load(std::string file, GLenum pixelType = GL_RGB);
 
     GLuint getId();
@@ -21,6 +21,9 @@ private:
     GLuint id = 0;
     std::string file;
     GLenum type;
+
+    int xN;
+    int yN;
 };
 
 #endif // OPENGLTEXTURE_H

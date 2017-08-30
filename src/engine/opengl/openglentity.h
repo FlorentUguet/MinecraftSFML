@@ -52,6 +52,8 @@ public:
     void setVisible(bool visible);
     bool isVisible();
 
+    void clearBuffers();
+
 protected:
     void addChild(OpenGLEntity *e);
     void removeChild(OpenGLEntity *e);

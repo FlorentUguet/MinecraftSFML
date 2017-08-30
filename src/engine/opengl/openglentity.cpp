@@ -16,6 +16,11 @@ OpenGLEntity::~OpenGLEntity()
         delete this->children[i];
     }
 
+    this->clearBuffers();
+}
+
+void OpenGLEntity::clearBuffers()
+{
     glDeleteBuffers(1, &this->vbo);
     glDeleteBuffers(1, &this->vboTexture);
     glDeleteBuffers(1, &this->vboIndices);
@@ -79,6 +84,8 @@ void OpenGLEntity::setTexture(OpenGLTexture *texture)
 
 void OpenGLEntity::loadBuffer()
 {
+    this->clearBuffers();
+
     if(this->vertices.size() != 0)
     {
         //VBO
@@ -198,7 +205,17 @@ void OpenGLEntity::draw(Scene *scene)
             glBindTexture(GL_TEXTURE_2D,this->texture->getId());
 
         glBindVertexArray(this->vao);
-        glDrawArrays(GL_TRIANGLES, 0, verticesCount);
+
+        if(this->vboIndices != 0)
+        {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
+            glDrawElements(GL_TRIANGLES, this->verticesIndices.size(), GL_UNSIGNED_INT, 0);
+        }
+        else
+        {
+            glDrawArrays(GL_TRIANGLES, 0, verticesCount);
+        }
+
         glBindVertexArray(0);
     }
 

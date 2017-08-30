@@ -1,11 +1,14 @@
 #include "opengltexture.h"
 
-OpenGLTexture::OpenGLTexture(std::string file, GLenum pixelType)
+OpenGLTexture::OpenGLTexture(std::string file, int xN, int yN, GLenum pixelType)
 {
     if(file != "")
     {
         this->load(file, pixelType);
     }
+
+    this->xN = xN;
+    this->yN = yN;
 }
 
 GLuint OpenGLTexture::getId()
@@ -38,9 +41,6 @@ GLuint OpenGLTexture::LoadTexture(std::string file, GLenum pixelType)
 
 GLuint OpenGLTexture::LoadTexture(int w, int h, unsigned char *pixels, GLenum pixelType)
 {
-    int s = sizeof(pixels);
-    int su = sizeof(unsigned char);
-
     GLuint textureID = 0;
     //parametrage de la texture
     glGenTextures(1, &textureID);

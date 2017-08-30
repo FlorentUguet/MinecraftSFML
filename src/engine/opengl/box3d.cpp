@@ -2,7 +2,10 @@
 
 Box3D::Box3D(OpenGLEntity *parent) : OpenGLEntity(parent)
 {
-
+    for(int i=0;i<Sides::COUNT;i++)
+    {
+        this->sides[i] = 0;
+    }
 }
 
 void Box3D::init()
@@ -55,5 +58,6 @@ bool Box3D::setSideVisible(int side, bool visible)
 
 void Box3D::setTextureSide(int side, OpenGLTexture* tex)
 {
-    this->sides[side]->setTexture(tex);
+    if(this->sides[side] != 0)
+        this->sides[side]->setTexture(tex);
 }

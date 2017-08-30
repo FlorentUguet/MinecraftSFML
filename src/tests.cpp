@@ -91,7 +91,7 @@ void Tests::TestBlocks(Renderer *r, std::string texSide, std::string texBottom, 
     b1->setTextureSide(Box3D::Sides::FRONT, textureSide);
     b1->setTextureSide(Box3D::Sides::BACK, textureSide);
 
-    b1->translate(0.0f,0.0f,-1.0f);
+    b1->translate(0.0f,0.0f,-2.0f);
     b1->scale(0.5f);
 
     Box3D *b2 = new Box3D(e);
