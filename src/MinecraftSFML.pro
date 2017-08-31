@@ -32,7 +32,7 @@ SOURCES += main.cpp \
     jsoncpp/jsoncpp.cpp \
     jsoncpp/jsonutils.cpp \
     engine/textures/opengltextureatlas.cpp \
-    engine/entities/instancinghandlerentity.cpp
+    engine/entities/openglattribute.cpp
 
 HEADERS += \
     znoise/Enums.hpp \
@@ -66,7 +66,7 @@ HEADERS += \
     jsoncpp/json/json-forwards.h \
     jsoncpp/jsonutils.h \
     engine/textures/opengltextureatlas.h \
-    engine/entities/instancinghandlerentity.h
+    engine/entities/openglattribute.h
 
 #Threading Linux
 unix: LIBS += -lpthread

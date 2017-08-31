@@ -446,12 +446,12 @@ void Tests::TestInstancing(Renderer *r, std::string texture, int x, int z)
     {
         for(int j=0;j<z;j++)
         {
-            offsets.push_back(glm::vec3(-i,0,-z));
+            offsets.push_back(glm::vec3(-i*3.0,0,-j*3.0));
         }
     }
 
     //Shaders
-    GLuint fragmentID = GLUtils::LoadShader("shaders/SimpleFragmentShader.fsh", GL_FRAGMENT_SHADER);
+    GLuint fragmentID = GLUtils::LoadShader("shaders/TextureFSH.fsh", GL_FRAGMENT_SHADER);
     GLuint vertexID = GLUtils::LoadShader("shaders/MvpInstancing.vsh", GL_VERTEX_SHADER);
 
     //Program
@@ -462,16 +462,16 @@ void Tests::TestInstancing(Renderer *r, std::string texture, int x, int z)
 
     Camera *c = new Camera();
     c->setParent(root);
-    c->translate(glm::vec3(-5.0f,5.0f,-5.0f));
+    c->translate(glm::vec3(5.0f,5.0f,5.0f));
 
     OpenGLTexture *tex = new OpenGLTexture(texture);
     Box3D *b = new Box3D(root);
     b->setTexture(tex);
     b->scale(0.5f);
-    b->setInstances(offsets);
+    //b->setInstances(offsets);
     b->init();
 
-    TestEntity(r,root,c,0,false);
+    TestEntity(r,root,c,0,true);
 }
 
 

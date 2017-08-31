@@ -4,6 +4,8 @@
 #include "../textures/opengltextureatlas.h"
 #include "../scene.h"
 
+#include "openglattribute.h"
+
 OpenGLEntity::OpenGLEntity(OpenGLEntity *parent)
 {
     setParent(parent);
@@ -105,19 +107,22 @@ void OpenGLEntity::loadBuffer()
 
     if(this->verticesXYZ.size() != 0)
     {
-        //VBO
-        GLfloat g_vertex_buffer_data[this->verticesXYZ.size()];
-        std::copy(this->verticesXYZ.begin(),this->verticesXYZ.end(),g_vertex_buffer_data);
+        //Vertices
+        if(this->verticesXYZ.size() != 0)
+        {
+            GLfloat data[this->verticesXYZ.size()];
+            std::copy(this->verticesXYZ.begin(),this->verticesXYZ.end(),data);
 
-        glGenBuffers(1, &this->vbo);
-        // The following commands will talk about our 'vertexbuffer' buffer
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        // Give our vertices to OpenGL.
-        glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+            this->attributes.push_back(new OpenGLAttribute(0, data, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0));
 
-        this->loaded = true;
+            glGenBuffers(1, &this->vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
-        GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO)");
+            this->loaded = true;
+
+            GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO)");
+        }
 
         //Texture
         if(this->verticesUV.size() != 0)
@@ -174,7 +179,7 @@ void OpenGLEntity::createVAO()
         {
             glBindBuffer(GL_ARRAY_BUFFER, this->vboInstances);
                 //Instances
-                glVertexAttribPointer(2, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+                glVertexAttribPointer(2, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
                 glEnableVertexAttribArray(2);
                 glVertexAttribDivisor(2, 1);
         }

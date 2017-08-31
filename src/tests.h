@@ -11,7 +11,6 @@
 #include "engine/textures/opengltexture.h"
 #include "engine/textures/opengltextureatlas.h"
 #include "engine/entities/jsonentity.h"
-#include "engine/entities/instancinghandlerentity.h"
 
 #include "engine/entities/camera.h"
 

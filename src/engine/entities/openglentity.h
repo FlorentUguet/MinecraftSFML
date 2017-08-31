@@ -12,6 +12,7 @@
 
 #include "../glutils.h"
 
+class OpenGLAttribute;
 class OpenGLTextureAtlas;
 class OpenGLTexture;
 class Scene;
@@ -82,11 +83,9 @@ protected:
     glm::vec3 rotation = glm::vec3(0.0f);
     glm::vec3 scaleVec = glm::vec3(DEFAULT_SCALE);
 
-    GLuint vbo = 0;
     GLuint vao = 0;
-    GLuint vboTexture = 0;
-    GLuint vboIndices = 0;
-    GLuint vboInstances = 0;
+
+    std::vector<OpenGLAttribute*> attributes;
 
     OpenGLTexture *texture = 0;
     OpenGLTextureAtlas *atlas = 0;
