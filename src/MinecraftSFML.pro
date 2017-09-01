@@ -68,6 +68,14 @@ HEADERS += \
     engine/textures/opengltextureatlas.h \
     engine/entities/openglattribute.h
 
+DISTFILES += \
+    shaders/SimpleFragmentShader.fsh \
+    shaders/SimpleVertexShader.vsh \
+    shaders/TextureFSH.fsh \
+    shaders/MVPVSH.vsh \
+    shaders/Light.fsh \
+    ../qt-builds/build-MinecraftSFML-Desktop_Qt_5_9_0_MinGW_32bit-Debug/shaders/MvpInstancing.vsh
+
 #Threading Linux
 unix: LIBS += -lpthread
 
@@ -91,11 +99,3 @@ DEPENDPATH += $$PWD/../lib/glew-2.1.0/include
 
 #GLM
 INCLUDEPATH += $$PWD/../lib/glm-0.9.8/include
-
-DISTFILES += \
-    shaders/SimpleFragmentShader.fsh \
-    shaders/SimpleVertexShader.vsh \
-    shaders/TextureFSH.fsh \
-    shaders/MVPVSH.vsh \
-    shaders/Light.fsh \
-    ../qt-builds/build-MinecraftSFML-Desktop_Qt_5_9_0_MinGW_32bit-Debug/shaders/MvpInstancing.vsh

@@ -32,7 +32,7 @@ public:
     virtual void draw(Scene *scene);
     virtual void init();
     void loadBuffer();
-    void createVAO();
+    void updateVAO();
 
     void setInstances(std::vector<glm::vec3> instances);
 
@@ -67,6 +67,8 @@ public:
 
     void clearBuffers();
 
+    OpenGLAttribute *getAttribute(GLuint index);
+
 protected:
     void addChild(OpenGLEntity *e);
     void removeChild(OpenGLEntity *e);
@@ -86,6 +88,8 @@ protected:
     GLuint vao = 0;
 
     std::vector<OpenGLAttribute*> attributes;
+
+    GLuint vboIndices = 0;
 
     OpenGLTexture *texture = 0;
     OpenGLTextureAtlas *atlas = 0;

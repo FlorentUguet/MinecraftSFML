@@ -24,8 +24,6 @@ OpenGLEntity::~OpenGLEntity()
 
 void OpenGLEntity::clearBuffers()
 {
-    glDeleteBuffers(1, &this->vbo);
-    glDeleteBuffers(1, &this->vboTexture);
     glDeleteBuffers(1, &this->vboIndices);
     glDeleteVertexArrays(1,&this->vao);
 }
@@ -112,15 +110,7 @@ void OpenGLEntity::loadBuffer()
         {
             GLfloat data[this->verticesXYZ.size()];
             std::copy(this->verticesXYZ.begin(),this->verticesXYZ.end(),data);
-
-            this->attributes.push_back(new OpenGLAttribute(0, data, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0));
-
-            glGenBuffers(1, &this->vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-            this->loaded = true;
-
+            this->attributes.push_back(new OpenGLAttribute(0, data, sizeof(data), 3, GL_FLOAT, GL_FALSE, 0));
             GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO)");
         }
 
@@ -129,10 +119,7 @@ void OpenGLEntity::loadBuffer()
         {
             GLfloat data[this->verticesUV.size()];
             std::copy(this->verticesUV.begin(),this->verticesUV.end(),data);
-
-            glGenBuffers(1, &this->vboTexture);
-            glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+            this->attributes.push_back(new OpenGLAttribute(1, data, sizeof(data), 2, GL_FLOAT, GL_FALSE, 0));
             GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VBO Texture)");
         }
 
@@ -142,20 +129,21 @@ void OpenGLEntity::loadBuffer()
             GLuint data[this->verticesI.size()];
             std::copy(this->verticesI.begin(),this->verticesI.end(),data);
 
-            //vboIndices
             glGenBuffers(1, &this->vboIndices);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, this->vboIndices);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
             GLUtils::OutputErrors("OpenGLEntity->loadBuffer(Indices)");
         }
 
-        createVAO();
+        updateVAO();
+        this->loaded = true;
 
         GLUtils::OutputErrors("OpenGLEntity->loadBuffer(VAO)");
     }
 }
 
-void OpenGLEntity::createVAO()
+void OpenGLEntity::updateVAO()
 {
     if(this->vao == 0)
         glDeleteBuffers(1,&this->vao);
@@ -164,46 +152,48 @@ void OpenGLEntity::createVAO()
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);
 
-    //VBO
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-            //Vertices
-            glVertexAttribPointer(0, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
-            glEnableVertexAttribArray(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, this->vboTexture);
-            //Texture
-            glVertexAttribPointer(1, TEXTURE_COORD_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
-            glEnableVertexAttribArray(1);
-
-        if(this->vboInstances > 0)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER, this->vboInstances);
-                //Instances
-                glVertexAttribPointer(2, VERTICE_SIZE, GL_FLOAT, GL_FALSE, 0, (void*)0);
-                glEnableVertexAttribArray(2);
-                glVertexAttribDivisor(2, 1);
-        }
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    for(unsigned i=0;i<this->attributes.size();i++)
+    {
+        OpenGLAttribute *a = this->attributes[i];
+        a->attach();
+    }
 
     glBindVertexArray(0);
 }
 
+OpenGLAttribute *OpenGLEntity::getAttribute(GLuint index)
+{
+    OpenGLAttribute  *a = 0;
+
+    for(unsigned i=0;i<this->attributes.size();i++)
+    {
+        if(this->attributes[i]->getIndex() == index)
+            a = this->attributes[i];
+    }
+
+    return a;
+}
+
 void OpenGLEntity::setInstances(std::vector<glm::vec3> instances)
 {
-    if(this->vboInstances != 0)
-        glDeleteBuffers(1, &this->vboInstances);
-
     this->instances = instances;
-
     glm::vec3 data[this->instances.size()];
-
     std::copy(this->instances.begin(), this->instances.end(), data);
 
-    glGenBuffers(1, &this->vboInstances);
-    glBindBuffer(GL_ARRAY_BUFFER, this->vboInstances);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * this->instances.size(), &data[0], GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    OpenGLAttribute *a = this->getAttribute(2);
+
+    if(a == 0)
+    {
+        a = new OpenGLAttribute(2, &data[0], sizeof(glm::vec3) * instances.size(), 3, GL_FLOAT, GL_FALSE, 0);
+        a->setAttribDivisor(1);
+        this->attributes.push_back(a);
+    }
+    else
+    {
+        a->generate(data, sizeof(data));
+    }
+
+    this->updateVAO();
 }
 
 void OpenGLEntity::translate(float x, float y, float z)
@@ -259,10 +249,11 @@ void OpenGLEntity::draw(Scene *scene)
 
         glBindVertexArray(this->vao);
 
-        if(this->vboInstances != 0)
+        if(this->getAttribute(2) != 0)
         {
+            OpenGLAttribute *a = this->getAttribute(2);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
-            glDrawElementsInstanced(GL_TRIANGLES, this->verticesI.size(), GL_UNSIGNED_INT, 0, this->instances.size());
+            glDrawElementsInstanced(GL_TRIANGLES, this->verticesI.size(), GL_UNSIGNED_INT, 0, a->getLength());
         }
         else if(this->vboIndices != 0)
         {

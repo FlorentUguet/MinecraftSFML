@@ -1,10 +1,8 @@
 #include "openglattribute.h"
 
-template<typename T>
-OpenGLAttribute::OpenGLAttribute(GLuint  id, T data[], GLint size, GLenum type, GLboolean normalized, GLsizei stride)
-{
+OpenGLAttribute::OpenGLAttribute(GLuint id, const GLvoid * data, GLsizeiptr length, GLint size, GLenum type, GLboolean normalized, GLsizei stride){
     this->setIndex(id);
-    this->generate(data);
+    this->generate(data, length);
 
     this->size = size;
     this->type = type;
@@ -12,23 +10,33 @@ OpenGLAttribute::OpenGLAttribute(GLuint  id, T data[], GLint size, GLenum type, 
     this->stride = stride;
 }
 
+OpenGLAttribute::~OpenGLAttribute()
+{
+    this->clearBuffer();
+}
+
+void OpenGLAttribute::clearBuffer()
+{
+    glDeleteBuffers(1,&this->buffer);
+}
+
 void OpenGLAttribute::setIndex(GLuint id)
 {
     this->index = id;
 }
 
-template<class T>
-void OpenGLAttribute::generate(T data[])
-{
+void OpenGLAttribute::generate(const GLvoid * data, GLsizeiptr length){
     if(this->buffer != 0)
-        glDeleteBuffers(1,&this->buffer);
+        this->clearBuffer();
 
     glGenBuffers(1, &this->buffer);
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, length, data, GL_STATIC_DRAW);
+
+    this->length = length;
 }
 
-void OpenGLAttribute::bind()
+void OpenGLAttribute::attach()
 {
     glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
         //Vertices
@@ -53,10 +61,21 @@ void OpenGLAttribute::setAttribDivisor(GLuint divisor)
     if(divisor == 0)
         this->hasDivisor = false;
 
-    this->divisor = 0;
+    this->divisor = divisor;
+    this->hasDivisor = true;
 }
 
 GLuint OpenGLAttribute::getBufferId()
 {
     return this->buffer;
+}
+
+GLuint OpenGLAttribute::getIndex()
+{
+    return this->index;
+}
+
+GLuint OpenGLAttribute::getLength()
+{
+    return this->length;
 }

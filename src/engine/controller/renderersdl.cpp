@@ -20,6 +20,7 @@ RendererSDL::RendererSDL(int w, int h, std::string title) : Renderer(w,h)
     // Double Buffer
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    //SDL_GL_SetSwapInterval(1);
 
     //Window
     this->window = SDL_CreateWindow(title.c_str(),SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,w,h,SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);

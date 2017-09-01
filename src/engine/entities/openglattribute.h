@@ -15,21 +15,23 @@
 class OpenGLAttribute
 {
 public:
-    template<typename T>
-    OpenGLAttribute(GLuint id, T data[], GLint size, GLenum type, GLboolean normalized, GLsizei stride);
+    OpenGLAttribute(GLuint id, const GLvoid * data, GLsizeiptr length, GLint size, GLenum type, GLboolean normalized, GLsizei stride);
+    ~OpenGLAttribute();
+    void clearBuffer();
 
     void setIndex(GLuint id);
 
-    template<typename T>
-    void generate(T data[]);
+    void generate(const GLvoid * data, GLsizeiptr length);
 
-    void bind();
+    void attach();
     void enable();
     void disable();
 
     void setAttribDivisor(GLuint divisor = 0);
 
     GLuint getBufferId();
+    GLuint getIndex();
+    GLuint getLength();
 
 private:
     GLuint buffer = 0;
@@ -40,6 +42,7 @@ private:
     GLsizei stride = 0;
     GLuint divisor = 0;
     GLenum type = 0;
+    GLsizeiptr length = 0;
 
     bool hasDivisor = false;
 };

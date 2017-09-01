@@ -3,11 +3,10 @@
 
 #include "opengl.h"
 
-#include "entities/openglentity.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 class GLUtils
 {

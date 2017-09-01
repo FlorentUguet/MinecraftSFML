@@ -468,7 +468,7 @@ void Tests::TestInstancing(Renderer *r, std::string texture, int x, int z)
     Box3D *b = new Box3D(root);
     b->setTexture(tex);
     b->scale(0.5f);
-    //b->setInstances(offsets);
+    b->setInstances(offsets);
     b->init();
 
     TestEntity(r,root,c,0,true);
